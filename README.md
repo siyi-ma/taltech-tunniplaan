@@ -5,7 +5,7 @@ A simple web-based course search interface for TalTech university courses. This 
 ## Features
 - Course search with auto-suggestions
 - Multiple search fields (course name, code, keywords)
-- Language toggle (EN/EE)
+- Language toggle (ET/EN)
 - Filter options
 - Responsive design
 - Self-contained HTML file with integrated CSS and JavaScript
