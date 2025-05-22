@@ -28,4 +28,4 @@ A simple web-based course search interface for TalTech university courses. This 
 
 ## Contact
 For questions or feedback about this prototype, please contact:
-[Your Contact Information]
+siyi.ma@taltech.ee
