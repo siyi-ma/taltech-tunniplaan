@@ -231,6 +231,9 @@
         </div>
         <main id="courseList" class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         </main>
+        <div id="paginationControls" class="mt-8 flex justify-center items-center space-x-1 sm:space-x-2">
+            <!-- Pagination buttons will be injected here -->
+        </div>
     </div>
     
     <div id="loadingIndicator" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-[100] hidden">
@@ -266,8 +269,10 @@
         let filteredCourses = [];
         let currentLanguage = 'et';
         let uniqueSearchableTerms = new Set();
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 24; // Divisible by 2 and 3 for grid layout
         const MAX_SUGGESTIONS = 7;
-        const DATA_SOURCE_URL = 'courses.json'; // Central configuration for the data source
+        const DATA_SOURCE_URL = 'courses_new.json'; // Central configuration for the data source
 
         const uiTexts = {
             pageTitle: { et: 'TalTech kursused sügis 2025', en: 'TalTech Courses Autumn 2025' },
@@ -380,6 +385,11 @@
             const objectivesText = currentLanguage === 'et' ? course.objectives_et : course.objectives_en;
             const learningOutcomesText = currentLanguage === 'et' ? course.learning_outcomes_et : course.learning_outcomes_en;
             const descriptionShort = currentLanguage === 'et' ? course.description_short_et : course.description_short_en;
+            
+            if (!descriptionShort) {
+                console.warn(`Description not found for course: "${course.name_et || course.id}". Check if 'description_short_et' or 'description_short_en' properties exist in your JSON. See the full object structure logged at initialization.`);
+            }
+
             const literature = currentLanguage === 'et' ? course.literature_et : (course.literature_en || course.literature_et);
             const schoolName = course.school_name;
             const assessmentFormText = course.assessment_form_et; 
@@ -458,45 +468,69 @@
             `;
         }
 
+        function renderPaginationControls(totalItems) {
+            const paginationControlsDOM = document.getElementById('paginationControls');
+            if (!paginationControlsDOM) return;
+            paginationControlsDOM.innerHTML = '';
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+            if (totalPages <= 1) return;
+
+            let paginationHTML = '';
+
+            // Previous Button
+            paginationHTML += `<button data-page="${currentPage - 1}" class="px-3 py-1 rounded text-sm font-medium ${currentPage === 1 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-gray-300 hover:bg-gray-400'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo;</button>`;
+
+            // Page Number Buttons (simplified logic for brevity)
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<button data-page="${i}" class="px-3 py-1 rounded text-sm font-medium bg-tt-magenta text-white" disabled>${i}</button>`;
+                } else {
+                    paginationHTML += `<button data-page="${i}" class="px-3 py-1 rounded text-sm font-medium bg-gray-300 hover:bg-gray-400">${i}</button>`;
+                }
+            }
+
+            // Next Button
+            paginationHTML += `<button data-page="${currentPage + 1}" class="px-3 py-1 rounded text-sm font-medium ${currentPage === totalPages ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-gray-300 hover:bg-gray-400'}" ${currentPage === totalPages ? 'disabled' : ''}>&raquo;</button>`;
+
+            paginationControlsDOM.innerHTML = paginationHTML;
+
+            paginationControlsDOM.querySelectorAll('button[data-page]').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const page = parseInt(e.currentTarget.dataset.page);
+                    if (page) {
+                        currentPage = page;
+                        applyAllFilters(); // Re-apply filters to render the new page
+                        window.scrollTo(0, 0); // Scroll to top of page
+                    }
+                });
+            });
+        }
+
         function renderCourses(coursesToRender) {
             if (!courseListContainerDOM) {
                 console.error("courseListContainerDOM is not found!");
                 return;
             }
             courseListContainerDOM.innerHTML = '';
-            
-            // Update results counter
-            if (resultsCounterDOM) {
-                if (coursesToRender.length === 0) {
-                    resultsCounterDOM.textContent = currentLanguage === 'et' ? 'Leitud 0 kursust' : 'Found 0 courses';
-                } else {
-                    resultsCounterDOM.textContent = `${coursesToRender.length} ${uiTexts.resultsFoundText[currentLanguage]}`;
-                }
-            }
-            
+            resultsCounterDOM.textContent = `${coursesToRender.length} ${uiTexts.resultsFoundText[currentLanguage]}`;
+
             if (coursesToRender.length === 0) {
                 courseListContainerDOM.innerHTML = `<p class="text-center text-tt-grey-1 col-span-full">${uiTexts.noCoursesFound[currentLanguage]}</p>`;
+                renderPaginationControls(0); // Clear pagination
                 return;
             }
-            coursesToRender.forEach(course => {
+
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const paginatedCourses = coursesToRender.slice(startIndex, endIndex);
+
+            paginatedCourses.forEach(course => {
                 const cardHTML = createCourseCardHTML(course);
                 courseListContainerDOM.insertAdjacentHTML('beforeend', cardHTML);
             });
             addExpandButtonListeners();
-            document.querySelectorAll('.expand-button i').forEach(icon => {
-                const parentButton = icon.closest('button');
-                if (!parentButton) return;
-                const content = parentButton.closest('div.flex-col').querySelector('.expandable-content');
-                if (!content) return;
-                const isHidden = content.classList.contains('hidden');
-                if (!isHidden) {
-                    icon.classList.remove(icon.dataset.show);
-                    icon.classList.add(icon.dataset.hide);
-                } else {
-                    icon.classList.remove(icon.dataset.hide);
-                    icon.classList.add(icon.dataset.show);
-                }
-            });
+            renderPaginationControls(coursesToRender.length);
         }
         
         function addExpandButtonListeners() {
@@ -531,6 +565,10 @@
         const debouncedApplyAllFiltersAndRenderDisplay = debounce(applyAllFiltersAndRenderDisplay, 300);
 
         function applyAllFilters() {
+            // When filters change, always reset to the first page
+            if (applyAllFilters.caller !== renderPaginationControls) {
+                currentPage = 1;
+            }
             if (loadingIndicatorDOM) loadingIndicatorDOM.classList.remove('hidden');
             setTimeout(() => {
                 let tempFilteredCourses = [...allCourses];
@@ -998,11 +1036,17 @@
                 const response = await fetch(DATA_SOURCE_URL);
                 console.log("Fetch response status:", response.status);
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}, File: ${DATA_SOURCE_URL}`);
+                    // Throw an error that includes the status text for more context (e.g., "404 Not Found")
+                    throw new Error(`HTTP error! Status: ${response.status} ${response.statusText}`);
                 }
+                console.log("Response OK. Parsing JSON (this may take a moment for large files)...");
                 allCourses = await response.json();
-                console.log("Courses loaded:", allCourses.length);
-
+                console.log(`JSON parsed successfully. ${allCourses.length} courses loaded.`);
+                // DEBUGGING: Log the first course object to inspect its structure.
+                if (allCourses.length > 0) {
+                    console.log("Structure of the first course object (for debugging):", allCourses[0]);
+                }
+                
                 allCourses.forEach(course => {
                     if (course.interests && Array.isArray(course.interests)) {
                         course.interests = course.interests.map(interest => interest === "History" ? "Law" : interest);
@@ -1023,10 +1067,19 @@
 
             } catch (error) {
                 console.error("Could not load or initialize courses:", error);
+                let userMessage = `Viga kursuste laadimisel (${error.message}). Palun kontrolli, et fail "${DATA_SOURCE_URL}" on olemas ja proovi hiljem uuesti.`;
+
+                // Provide a more helpful message for the most common fetch failure.
+                if (error instanceof TypeError && error.message === 'Failed to fetch') {
+                    userMessage = `Andmete laadimine ebaõnnestus. <strong>See juhtub tihti, kui avate HTML-faili otse (kasutades 'file:///...'). Palun kasutage lokaalset veebiserverit (nagu VS Code'i "Live Server" laiendus), et lehte serveerida üle 'http://...'.</strong> (Viga: Failed to fetch)`;
+                } else if (error.message.includes('404')) {
+                    userMessage = `Faili "${DATA_SOURCE_URL}" ei leitud. Palun veenduge, et see asub samas kaustas, kus on 'index.html'. (Viga: 404 Not Found)`;
+                }
+
                 if (courseListContainerDOM) {
-                     courseListContainerDOM.innerHTML = `<p class="text-red-500 text-center col-span-full">Viga kursuste laadimisel (${error.message}). Palun kontrolli, et fail "courses.json" on olemas ja proovi hiljem uuesti.</p>`;
+                     courseListContainerDOM.innerHTML = `<p class="text-red-500 text-center col-span-full">${userMessage}</p>`;
                 } else {
-                    alert(`Viga kursuste laadimisel (${error.message}). Palun kontrolli, et fail "courses.json" on olemas ja proovi hiljem uuesti.`);
+                    alert(userMessage.replace(/<[^>]*>/g, '')); // alert doesn't support HTML
                 }
             } finally {
                  if (loadingIndicatorDOM) loadingIndicatorDOM.classList.add('hidden');
