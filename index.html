@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TalTech kursused kevad 2025</title> <!-- CHANGED TITLE -->
+    <title>TalTech kursused sügis 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -106,35 +106,39 @@
     <header class="sticky top-0 z-50 bg-tt-dark-blue text-white p-4 shadow-md">
         <div class="container mx-auto flex items-center justify-between">
             <div class="flex items-center">
-                <!-- CHANGED FILTER TOGGLE BUTTON APPEARANCE -->
-                <button id="filterToggleButton" class="mr-4 p-3 text-tt-light-blue hover:bg-tt-dark-blue-hover rounded-full" aria-label="Ava filtrid">
-                    <i class="fas fa-filter fa-lg"></i> <!-- Changed icon -->
+                <button id="filterToggleButton" class="mr-4 p-2 text-white hover:bg-tt-dark-blue-hover rounded" aria-label="Ava filtrid">
+                    <i class="fas fa-bars fa-lg"></i>
                 </button>
-                <h1 id="pageTitle" class="text-2xl proxima-nova-bold uppercase">TalTech kursused kevad 2025</h1> <!-- CHANGED TITLE -->
+                <h1 id="pageTitle" class="text-2xl proxima-nova-bold uppercase">TalTech kursused sügis 2025</h1>
             </div>
-            <button id="languageToggle" class="p-2 bg-tt-magenta hover:bg-opacity-80 rounded" aria-label="Switch language">
-                <i class="fas fa-globe"></i> <span id="langIndicator">EN</span>
-            </button>
+            <div class="flex items-center gap-3">
+                <button id="createCalendarButton" class="p-2 bg-tt-light-blue hover:bg-opacity-80 rounded text-white text-sm proxima-nova-bold hidden" aria-label="Loo kalender">
+                    <i class="fas fa-calendar-plus mr-1"></i> <span id="calendarButtonText">Loo kalender</span> (<span id="selectedCount">0</span>)
+                </button>
+                <button id="languageToggle" class="p-2 bg-tt-magenta hover:bg-opacity-80 rounded" aria-label="Switch language">
+                    <i class="fas fa-globe"></i> <span id="langIndicator">EN</span>
+                </button>
+            </div>
         </div>
     </header>
 
     <!-- Search Area -->
-    <div class="container mx-auto p-4 my-4 bg-gray-50 rounded shadow">
+    <div class="container mx-auto p-4 my-4 bg-gray-50 bg-opacity-90 rounded shadow">
         <div class="flex flex-col md:flex-row md:items-end gap-4">
-            <div class="flex-grow relative">
+            <div class="flex-grow relative md:w-3/5">
                 <label for="searchInput" id="searchInputLabel" class="block text-sm font-medium text-gray-700 mb-1">Otsisõna</label>
-                <input type="search" id="searchInput" class="p-2 border border-gray-300 rounded-md w-full body-text" placeholder="Sisesta otsisõna...">
+                <input type="search" id="searchInput" class="p-2 border border-gray-300 bg-white bg-opacity-90 rounded-md w-full body-text" placeholder="Sisesta otsisõna...">
                 <div id="suggestionsContainer" class="absolute left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-[60] hidden max-h-60 overflow-y-auto text-sm">
                     <!-- Suggestions -->
                 </div>
             </div>
-            <div>
+            <div class="md:w-1/5">
                 <label for="searchFieldSelector" id="searchFieldSelectorLabel" class="block text-sm font-medium text-gray-700 mb-1">Otsi väljal</label>
-                <select id="searchFieldSelector" class="p-2 border border-gray-300 rounded-md w-full md:w-auto text-sm h-[2.625rem]"> 
+                <select id="searchFieldSelector" class="p-2 border border-gray-300 bg-white bg-opacity-90 rounded-md w-full text-sm h-[2.625rem]"> 
                     <option value="all">Kõik väljad</option>
-                    <option value="title">Aine nimetus / Course name</option>
+                    <option value="title">Aine nimetus</option>
                     <option value="course_id">Kursuse kood</option>
-                    <option value="keyword">Märksõna/Huviala</option>
+                    <option value="keyword">Õppejõud/Ruum/Rühm</option>
                 </select>
             </div>
             <div class="flex gap-2 mt-2 md:mt-0">
@@ -150,8 +154,7 @@
 
 
     <!-- Filter Panel -->
-    <!-- CHANGED WIDTH CLASSES FOR NARROWER PANEL -->
-    <aside id="filterPanel" class="bg-gray-50 p-4 shadow-lg fixed inset-y-0 left-0 transform -translate-x-full z-40 w-11/12 sm:w-3/4 md:w-1/2 lg:w-2/5 xl:w-1/3 overflow-y-auto max-h-screen transition-transform duration-300 ease-in-out rounded-r-lg">
+    <aside id="filterPanel" class="bg-gray-50 bg-opacity-95 p-4 shadow-lg fixed inset-y-0 left-0 transform -translate-x-full z-40 w-3/5 sm:w-2/5 md:w-1/3 lg:w-1/4 xl:w-1/5 overflow-y-auto mt-16 max-h-[calc(100%-4rem)] transition-transform duration-300 ease-in-out rounded-r-lg">
         <div class="flex justify-between items-center mb-4">
             <h2 id="filtersTitle" class="text-xl headline tt-dark-blue">Filtrid</h2>
             <button id="closeFilterButton" class="text-tt-magenta hover:text-tt-dark-blue">
@@ -161,42 +164,22 @@
         
         <div class="space-y-4">
             <div>
-                <label for="schoolFilter" id="schoolFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Kool</label>
+                <label for="schoolFilter" id="schoolFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Kursuse tüüp</label>
                 <select id="schoolFilter" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm focus:border-tt-magenta focus:ring focus:ring-tt-magenta focus:ring-opacity-50 text-sm">
-                    <option value="">Kõik koolid</option>
+                    <option value="">Kõik tüübid</option>
                 </select>
             </div>
             <div id="instituteFilterContainer">
-                <label for="instituteFilter" id="instituteFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Instituut</label>
-                <select id="instituteFilter" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm focus:border-tt-magenta focus:ring focus:ring-tt-magenta focus:ring-opacity-50 text-sm" disabled>
-                    <option value="">Kõik instituudid</option>
+                <label for="instituteFilter" id="instituteFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Õppenädal</label>
+                <select id="instituteFilter" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm focus:border-tt-magenta focus:ring focus:ring-tt-magenta focus:ring-opacity-50 text-sm">
+                    <option value="">Kõik nädalad</option>
                 </select>
             </div>
+
             <div>
-                <label id="eapFilterLabel" class="block text-sm font-medium tt-dark-blue headline mb-1">EAP</label>
-                <div class="space-y-1">
-                    <label class="flex items-center text-sm">
-                        <input type="radio" name="eapFilter" value="" class="focus:ring-tt-magenta h-4 w-4 text-tt-magenta border-tt-grey-1" checked>
-                        <span id="eapAllLabel" class="ml-2">Kõik</span>
-                    </label>
-                    <label class="flex items-center text-sm">
-                        <input type="radio" name="eapFilter" value="3" class="focus:ring-tt-magenta h-4 w-4 text-tt-magenta border-tt-grey-1">
-                        <span id="eap3Label" class="ml-2">3 EAP</span>
-                    </label>
-                    <label class="flex items-center text-sm">
-                        <input type="radio" name="eapFilter" value="6" class="focus:ring-tt-magenta h-4 w-4 text-tt-magenta border-tt-grey-1">
-                        <span id="eap6Label" class="ml-2">6 EAP</span>
-                    </label>
-                     <label class="flex items-center text-sm">
-                        <input type="radio" name="eapFilter" value="9" class="focus:ring-tt-magenta h-4 w-4 text-tt-magenta border-tt-grey-1">
-                        <span id="eap9Label" class="ml-2">9 EAP</span>
-                    </label>
-                </div>
-            </div>
-            <div>
-                <label for="assessmentFormFilter" id="assessmentFormFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Hindamisvorm</label>
+                <label for="assessmentFormFilter" id="assessmentFormFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Õppejõud</label>
                 <select id="assessmentFormFilter" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm focus:border-tt-magenta focus:ring focus:ring-tt-magenta focus:ring-opacity-50 text-sm">
-                    <option value="">Kõik vormid</option>
+                    <option value="">Kõik õppejõud</option>
                 </select>
             </div>
             <div>
@@ -205,10 +188,6 @@
                     <label class="flex items-center text-sm">
                         <input type="radio" name="languageFilter" value="" class="focus:ring-tt-magenta h-4 w-4 text-tt-magenta border-tt-grey-1" checked> 
                         <span id="langAllLabel" class="ml-2">Kõik</span>
-                    </label>
-                    <label class="flex items-center text-sm">
-                        <input type="radio" name="languageFilter" value="et+en" class="focus:ring-tt-magenta h-4 w-4 text-tt-magenta border-tt-grey-1">
-                        <span id="langEtEnLabel" class="ml-2">Eesti ja Inglise keel</span>
                     </label>
                     <label class="flex items-center text-sm">
                         <input type="radio" name="languageFilter" value="et" class="focus:ring-tt-magenta h-4 w-4 text-tt-magenta border-tt-grey-1">
@@ -225,14 +204,62 @@
 
     <!-- Main Content Area -->
     <div class="container mx-auto p-4">
-        <div id="activeFiltersDisplay" class="mb-4">
-            <!-- Active filter pills will be injected here -->
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center gap-4">
+                <div id="resultsCounter" class="text-tt-dark-blue font-semibold"></div>
+                <div class="flex bg-gray-200 rounded-lg p-1">
+                    <button id="cardViewBtn" class="px-3 py-1 rounded text-sm font-medium bg-white text-tt-dark-blue shadow-sm" onclick="switchView('cards')">
+                        <i class="fas fa-th-large mr-1"></i><span id="cardViewText">Kaardid</span>
+                    </button>
+                    <button id="weekViewBtn" class="px-3 py-1 rounded text-sm font-medium text-gray-600 hover:text-tt-dark-blue" onclick="switchView('weekly')">
+                        <i class="fas fa-calendar-week mr-1"></i><span id="weekViewText">Nädal</span>
+                    </button>
+                </div>
+            </div>
+            <div id="activeFiltersDisplay">
+                <!-- Active filter pills will be injected here -->
+            </div>
         </div>
-        <div id="searchResultCount" class="mb-4 text-sm text-tt-grey-1">
-            <!-- Search result count will be injected here -->
+        
+        <!-- Calendar View Modal -->
+        <div id="calendarModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <h2 id="calendarModalTitle" class="text-2xl proxima-nova-bold tt-dark-blue">Valitud kursuste kalender</h2>
+                            <button id="closeCalendarModal" class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-times fa-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 overflow-y-auto max-h-[70vh]">
+                        <div id="calendarView" class="space-y-4">
+                            <!-- Calendar content will be generated here -->
+                        </div>
+                    </div>
+                    <div class="p-6 border-t border-gray-200 flex justify-between items-center">
+                        <div class="text-sm text-gray-600">
+                            <span id="calendarCourseCount"></span>
+                        </div>
+                        <div class="flex gap-3">
+                            <button id="downloadCalendarBtn" class="bg-tt-magenta text-white px-6 py-2 rounded hover:bg-opacity-80 proxima-nova-bold">
+                                <i class="fas fa-download mr-2"></i><span id="downloadBtnText">Laadi alla .ics fail</span>
+                            </button>
+                            <button id="cancelCalendarBtn" class="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400 proxima-nova-bold">
+                                <span id="cancelBtnText">Sulge</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        
         <main id="courseList" class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         </main>
+        <div id="weeklyView" class="w-full hidden">
+            <!-- Weekly calendar view will be rendered here -->
+        </div>
     </div>
     
     <div id="loadingIndicator" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-[100] hidden">
@@ -243,7 +270,7 @@
     </div>
 
     <script>
-        // DOM Elements (defined once)
+        // Ensure all DOM element variables are declared at the top
         const searchInputDOM = document.getElementById('searchInput');
         const searchFieldSelectorDOM = document.getElementById('searchFieldSelector');
         const searchButtonDOM = document.getElementById('searchButton');
@@ -252,7 +279,6 @@
         const languageToggleDOM = document.getElementById('languageToggle');
         const courseListContainerDOM = document.getElementById('courseList');
         const activeFiltersDisplayDOM = document.getElementById('activeFiltersDisplay');
-        const searchResultCountDOM = document.getElementById('searchResultCount'); // New
         const schoolFilterDOM = document.getElementById('schoolFilter');
         const instituteFilterDOM = document.getElementById('instituteFilter');
         const eapFilterRadiosDOM = document.querySelectorAll('input[name="eapFilter"]');
@@ -262,44 +288,54 @@
         const filterPanelDOM = document.getElementById('filterPanel');
         const filterToggleButtonDOM = document.getElementById('filterToggleButton');
         const closeFilterButtonDOM = document.getElementById('closeFilterButton');
-        const pageTitleDOM = document.getElementById('pageTitle');
+        const pageTitleDOM = document.getElementById('pageTitle'); // Added for completeness
+        const resultsCounterDOM = document.getElementById('resultsCounter');
+        const cardViewBtnDOM = document.getElementById('cardViewBtn');
+        const weekViewBtnDOM = document.getElementById('weekViewBtn');
+        const weeklyViewDOM = document.getElementById('weeklyView');
+        const createCalendarButtonDOM = document.getElementById('createCalendarButton');
+        const selectedCountDOM = document.getElementById('selectedCount');
 
         let allCourses = [];
         let filteredCourses = [];
         let currentLanguage = 'et';
         let uniqueSearchableTerms = new Set();
         const MAX_SUGGESTIONS = 7;
+        let currentView = 'cards'; // 'cards' or 'weekly'
+        let selectedCourses = new Set();
 
         const uiTexts = {
-            pageTitle: { et: 'TalTech kursused kevad 2025', en: 'TalTech Courses Spring 2025' }, // CHANGED
+            pageTitle: { et: 'TalTech kursused sügis 2025', en: 'TalTech Courses Autumn 2025' },
             searchInputLabel: { et: 'Otsisõna', en: 'Search term' },
             searchPlaceholder: { et: 'Sisesta otsisõna...', en: 'Insert search word...' },
             searchFieldSelectorLabel: { et: 'Otsi väljal', en: 'Search in field' },
             searchField_all: { et: 'Kõik väljad', en: 'All fields' },
             searchField_title: { et: 'Aine nimetus / Course name', en: 'Course name' },
             searchField_course_id: { et: 'Kursuse kood', en: 'Course code' },
-            searchField_keyword: { et: 'Märksõna/Huviala', en: 'Keyword/Interest' },
+            searchField_keyword: { et: 'Õppejõud/Ruum/Rühm', en: 'Instructor/Room/Group' },
             searchButtonText: { et: 'Otsi', en: 'Search' },
             resetSearchButtonText: { et: 'Lähtesta', en: 'Reset' },
+            resultsFoundText: { et: 'sessiooni leitud', en: 'sessions found' },
+            cardViewText: { et: 'Kaardid', en: 'Cards' },
+            weekViewText: { et: 'Nädal', en: 'Weekly' },
             activeFiltersHeader: { et: 'Valitud filtrid:', en: 'Selected filters:'},
             clearAllFiltersButton: { et: 'Eemalda kõik filtrid', en: 'Clear all filters'},
-            searchResultCountText: { et: (count) => `Leiti ${count} kursust.`, en: (count) => `Found ${count} courses.` }, // New
             langIndicator: { et: 'EN', en: 'ET' },
             filterToggleButtonLabelOpen: { et: 'Ava filtrid', en: 'Open Filters' },
             filterToggleButtonLabelClose: { et: 'Sulge filtrid', en: 'Close Filters' },
             filtersTitle: { et: 'Filtrid', en: 'Filters' },
-            schoolFilterLabel: { et: 'Kool', en: 'School' },
-            allSchools: { et: 'Kõik koolid', en: 'All Schools' },
-            instituteFilterLabel: { et: 'Instituut', en: 'Institute' },
-            allInstitutes: { et: 'Kõik instituudid', en: 'All Institutes' },
-            selectInstitute: { et: 'Vali instituut', en: 'Select Institute' },
+            schoolFilterLabel: { et: 'Kursuse tüüp', en: 'Course Type' },
+            allSchools: { et: 'Kõik tüübid', en: 'All Types' },
+            instituteFilterLabel: { et: 'Õppenädal', en: 'Study Week' },
+            allInstitutes: { et: 'Kõik nädalad', en: 'All Weeks' },
+            selectInstitute: { et: 'Vali nädal', en: 'Select Week' },
             eapFilterLabel: { et: 'EAP', en: 'ECTS (Credits)' },
             eapAllLabel: { et: 'Kõik', en: 'All' },
             eap3Label: { et: '3 EAP', en: '3 ECTS' },
             eap6Label: { et: '6 EAP', en: '6 ECTS' },
             eap9Label: { et: '9 EAP', en: '9 ECTS' },
-            assessmentFormFilterLabel: { et: 'Hindamisvorm', en: 'Assessment Form' },
-            allAssessmentForms: { et: 'Kõik vormid', en: 'All Forms' },
+            assessmentFormFilterLabel: { et: 'Õppejõud', en: 'Instructor' },
+            allAssessmentForms: { et: 'Kõik õppejõud', en: 'All Instructors' },
             languageFilterLabel: { et: 'Õppekeel', en: 'Teaching Language' },
             langAllLabel: { et: 'Kõik', en: 'All' },
             langEtEnLabel: { et: 'Eesti ja Inglise keel', en: 'Estonian and English' }, 
@@ -316,8 +352,12 @@
             timetableLink: { et: 'Tunniplaan', en: 'Timetable' },
             showMore: { et: 'Näita rohkem', en: 'Show more' },
             showLess: { et: 'Näita vähem', en: 'Show less' },
-            noCoursesFound: { et: 'Vastavaid kursuseid ei leitud.', en: 'No matching courses found.' },
+            noCoursesFound: { et: 'Vastavaid sessioone ei leitud.', en: 'No matching sessions found.' },
             loadingText: { et: 'Laen andmeid...', en: 'Loading data...' },
+            calendarButtonText: { et: 'Vaata kalendrit', en: 'View Calendar' },
+            calendarModalTitle: { et: 'Valitud kursuste kalender', en: 'Selected Courses Calendar' },
+            downloadBtnText: { et: 'Laadi alla .ics fail', en: 'Download .ics file' },
+            cancelBtnText: { et: 'Sulge', en: 'Close' },
         };
 
         let activeFilters = {
@@ -339,6 +379,7 @@
         }
 
         function setLanguage(lang) {
+            console.log("Setting language to:", lang);
             currentLanguage = lang;
             document.documentElement.lang = lang;
             hideSuggestions();
@@ -348,15 +389,13 @@
         }
 
         function updateAllUITexts() {
+            console.log("Updating UI texts for language:", currentLanguage);
             Object.keys(uiTexts).forEach(key => {
                 const element = document.getElementById(key);
                 if (element) {
                      if (element.id === 'searchInput' && key === 'searchPlaceholder') {
                         element.placeholder = uiTexts[key][currentLanguage];
-                    } else if (typeof uiTexts[key] === 'function') { // For dynamic text like searchResultCountText
-                        // This will be handled by renderCourses for searchResultCountDOM specifically
-                    }
-                    else {
+                    } else {
                          element.textContent = uiTexts[key][currentLanguage];
                     }
                 }
@@ -371,127 +410,382 @@
             const langIndicator = document.getElementById('langIndicator');
             if (langIndicator) langIndicator.textContent = uiTexts.langIndicator[currentLanguage === 'et' ? 'en' : 'et'];
 
+            // Update calendar button text
+            const calendarButtonTextElement = document.getElementById('calendarButtonText');
+            if (calendarButtonTextElement) {
+                calendarButtonTextElement.textContent = uiTexts.calendarButtonText[currentLanguage];
+            }
+
+            // Update modal texts
+            const calendarModalTitleElement = document.getElementById('calendarModalTitle');
+            if (calendarModalTitleElement) {
+                calendarModalTitleElement.textContent = uiTexts.calendarModalTitle[currentLanguage];
+            }
+            
+            const downloadBtnTextElement = document.getElementById('downloadBtnText');
+            if (downloadBtnTextElement) {
+                downloadBtnTextElement.textContent = uiTexts.downloadBtnText[currentLanguage];
+            }
+            
+            const cancelBtnTextElement = document.getElementById('cancelBtnText');
+            if (cancelBtnTextElement) {
+                cancelBtnTextElement.textContent = uiTexts.cancelBtnText[currentLanguage];
+            }
 
             const filterPanelIsOpen = filterPanelDOM ? filterPanelDOM.classList.contains('filter-drawer-open') : false;
-            if (filterToggleButtonDOM) {
-                 filterToggleButtonDOM.setAttribute('aria-label', uiTexts[filterPanelIsOpen ? 'filterToggleButtonLabelClose' : 'filterToggleButtonLabelOpen'][currentLanguage]);
-                 // Update icon based on state directly here as well if needed
-                 const icon = filterToggleButtonDOM.querySelector('i');
-                 if (icon) {
-                    if(filterPanelIsOpen) {
-                        icon.classList.remove('fa-filter'); icon.classList.add('fa-times');
-                    } else {
-                        icon.classList.remove('fa-times'); icon.classList.add('fa-filter');
-                    }
-                 }
-            }
+            if (filterToggleButtonDOM) filterToggleButtonDOM.setAttribute('aria-label', uiTexts[filterPanelIsOpen ? 'filterToggleButtonLabelClose' : 'filterToggleButtonLabelOpen'][currentLanguage]);
         }
 
         function createCourseCardHTML(course) {
-            const nameEt = course.name_et || (currentLanguage === 'et' ? 'Nimetu kursus' : 'Untitled Course');
-            const nameEn = course.name_en || (currentLanguage === 'en' ? 'Untitled Course' : 'Nimetu kursus');
-            const objectivesText = currentLanguage === 'et' ? course.objectives_et : course.objectives_en;
-            const learningOutcomesText = currentLanguage === 'et' ? course.learning_outcomes_et : course.learning_outcomes_en;
-            const descriptionShort = currentLanguage === 'et' ? course.description_short_et : course.description_short_en;
-            const literature = currentLanguage === 'et' ? course.literature_et : (course.literature_en || course.literature_et);
-            const schoolName = course.school_name;
-            const assessmentFormText = course.assessment_form_et; 
-            const courseId = course.id || ''; 
+            const courseName = course.aine || (currentLanguage === 'et' ? 'Nimetu kursus' : 'Untitled Course');
+            const courseCode = course.ainekood || '';
+            const instructor = course.oppejoud || '';
+            const courseType = course.tyyp || '';
+            const language = course.keel || '';
+            const groups = course.ryhmad || '';
+            const weekNumbers = [...new Set(course.sessions.map(s => s.oppenadalad))].filter(w => w).sort((a, b) => parseInt(a) - parseInt(b));
 
             let langDisplayTag = '';
-            const isEt = course.keel_et === "1"; 
-            const isEn = course.keel_en === "1"; 
-            if (isEt && isEn) langDisplayTag = 'ET + EN';
-            else if (isEt) langDisplayTag = 'ET';
-            else if (isEn) langDisplayTag = 'EN';
+            if (language === 'Eesti keel') langDisplayTag = 'ET';
+            else if (language === 'English') langDisplayTag = 'EN';
+            else langDisplayTag = language;
 
-            const listify = (text) => {
-                if (!text) return `<li>${currentLanguage === 'et' ? 'Andmed puuduvad' : 'Not available'}</li>`;
-                const items = text.split(/\n(?=- )/).map(item => item.trim()).filter(item => item.length > 0);
-                if (items.length > 0) {
-                    return items.map(item => `<li>${item.startsWith('- ') ? item.substring(2) : item}</li>`).join('');
-                }
-                return text.split('\n').map(item => item.trim()).filter(item => item.length > 0).map(item => `<li>${item}</li>`).join('');
+            // Format date for better display
+            const formatDate = (dateStr) => {
+                if (!dateStr) return '';
+                const [day, month, year] = dateStr.split('.');
+                const date = new Date(year, month - 1, day);
+                return currentLanguage === 'et' 
+                    ? date.toLocaleDateString('et-EE', { weekday: 'short', day: '2-digit', month: '2-digit' })
+                    : date.toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: '2-digit' });
             };
-            
-            const objectivesList = listify(objectivesText);
-            const learningOutcomesList = listify(learningOutcomesText);
-            const literatureList = listify(literature);
+
+            function summarizeCourseSessions(sessions) {
+                if (sessions.length === 1) {
+                    const s = sessions[0];
+                    return {
+                        dateRange: formatDate(s.date),
+                        timeRange: `${s.start} - ${s.end}`,
+                        sessionCount: 1
+                    };
+                }
+                
+                const dates = sessions.map(s => s.date).sort();
+                const firstDate = formatDate(dates[0]);
+                const lastDate = formatDate(dates[dates.length - 1]);
+                
+                const times = [...new Set(sessions.map(s => `${s.start} - ${s.end}`))];
+                
+                return {
+                    dateRange: firstDate === lastDate ? firstDate : `${firstDate} - ${lastDate}`,
+                    timeRange: times.length === 1 ? times[0] : `${currentLanguage === 'et' ? 'Erinevad ajad' : 'Various times'}`,
+                    sessionCount: sessions.length
+                };
+            }
+
+            // Get session summary
+            const sessionSummary = summarizeCourseSessions(course.sessions);
 
             return `
                 <div class="bg-white rounded-lg shadow-md border border-tt-grey-1 overflow-hidden flex flex-col">
                     <div class="p-4">
                         <div class="flex justify-between items-start mb-1">
-                            <h2 class="text-lg proxima-nova-bold tt-dark-blue uppercase flex-grow pr-2">${nameEt}</h2>
-                            ${courseId ? `<span class="text-base tt-dark-blue font-mono whitespace-nowrap">${courseId}</span>` : ''} <!-- CHANGED COURSE ID APPEARANCE -->
+                            <div class="flex items-center flex-grow pr-2">
+                                <input type="checkbox" class="course-selector mr-3 h-4 w-4 text-tt-magenta border-gray-300 rounded focus:ring-tt-magenta" 
+                                       data-course-id="${courseCode}" 
+                                       data-course-data='${JSON.stringify(course).replace(/'/g, "&#39;")}'>
+                                <h2 class="text-lg proxima-nova-bold uppercase">
+                                    ${course.ainekavaurl ? `<a href="${course.ainekavaurl}" target="_blank" class="tt-magenta hover:underline">${courseName}</a>` : `<span class="tt-dark-blue">${courseName}</span>`}
+                                </h2>
+                            </div>
+                            ${courseCode ? `<span class="text-md proxima-nova-bold tt-dark-blue whitespace-nowrap">${courseCode}</span>` : ''}
                         </div>
-                        ${nameEt.toLowerCase() !== nameEn.toLowerCase() ? `<h3 class="text-md tt-grey-1 mb-2">${nameEn}</h3>` : ''}
-
-                        <div class="mb-2 text-sm tt-grey-1">
-                            <span class="tooltip">${course.eap} <span>${uiTexts.eapTooltip[currentLanguage]}</span><span class="tooltiptext body-text">${course.eap} ${uiTexts.eapFull[currentLanguage]}</span></span>
-                        </div>
-                        <div class="mb-3 flex flex-wrap gap-2">
-                            ${schoolName ? `<span class="inline-block bg-gray-200 text-gray-700 text-xs font-semibold px-2.5 py-0.5 rounded">${schoolName}</span>` : ''}
+                        
+                        <div class="mb-3 flex flex-wrap gap-2 items-center">
                             ${langDisplayTag ? `<span class="inline-block bg-tt-light-blue text-white text-xs font-semibold px-2.5 py-0.5 rounded">${langDisplayTag}</span>` : ''}
+                            ${courseType ? `<span class="inline-block bg-gray-200 text-gray-700 text-xs font-semibold px-2.5 py-0.5 rounded">${courseType}</span>` : ''}
+                            ${weekNumbers.length ? `<span class="inline-block bg-gray-200 text-tt-dark-blue text-xs font-semibold px-2.5 py-0.5 rounded">
+                                ${currentLanguage === 'et' ? 'Nädalad' : 'Weeks'} ${weekNumbers.join(', ')}
+                            </span>` : ''}
+                            ${sessionSummary.sessionCount > 1 ? `<span class="inline-block bg-tt-magenta text-white text-xs font-semibold px-2.5 py-0.5 rounded">
+                                ${sessionSummary.sessionCount} ${currentLanguage === 'et' ? 'sessiooni' : 'sessions'}
+                            </span>` : ''}
                         </div>
-                        <p class="text-sm text-gray-700 mb-3 body-text h-20 overflow-y-auto">${descriptionShort || (currentLanguage === 'et' ? 'Kirjeldus puudub' : 'No description')}</p>
+
+                        <div class="text-sm text-gray-700 mb-3 space-y-1">
+                            <div><i class="fas fa-calendar mr-2 text-tt-magenta"></i><strong>${sessionSummary.dateRange}</strong></div>
+                            <div><i class="fas fa-clock mr-2 text-tt-magenta"></i>${sessionSummary.timeRange}</div>
+                            ${instructor ? `<div><i class="fas fa-user mr-2 text-tt-magenta"></i>${instructor}</div>` : ''}
+                        </div>
+                        
+                        ${groups ? `<p class="text-xs text-gray-500 mb-2">${currentLanguage === 'et' ? 'Rühmad' : 'Groups'}: ${groups}</p>` : ''}
                     </div>
                     <div class="px-4 pb-4 mt-auto">
-                        <button class="expand-button text-tt-magenta hover:text-tt-dark-blue text-sm proxima-nova-bold" aria-expanded="false" aria-controls="details-${course.id}">
-                            <i class="fas fa-plus mr-1"></i> <span data-show="${uiTexts.showMore[currentLanguage]}" data-hide="${uiTexts.showLess[currentLanguage]}">${uiTexts.showMore[currentLanguage]}</span>
+                        <button class="expand-button text-tt-magenta hover:text-tt-dark-blue text-sm proxima-nova-bold" aria-expanded="false" aria-controls="details-${courseCode}">
+                            <i class="fas fa-plus" data-show="fa-plus" data-hide="fa-minus"></i>
+                            <span class="ml-1">${currentLanguage === 'et' ? 'Vaata sessioone' : 'View sessions'}</span>
                         </button>
                     </div>
-                    <div id="details-${course.id}" class="expandable-content hidden p-4 border-t border-tt-grey-1 bg-gray-50">
-                        <div class="mb-2 text-sm tt-grey-1">
-                           ${uiTexts.semester[currentLanguage]}: ${course.semester_et || (currentLanguage === 'et' ? 'Puudub' : 'N/A')} | 
-                           ${uiTexts.assessment[currentLanguage]}: ${assessmentFormText || (currentLanguage === 'et' ? 'Puudub' : 'N/A')}
-                        </div>
-                        <h4 class="font-semibold tt-dark-blue mb-1 headline">${uiTexts.objectives[currentLanguage]}</h4>
-                        <ul class="list-disc list-inside text-sm mb-3 body-text">${objectivesList}</ul>
-                        
-                        <h4 class="font-semibold tt-dark-blue mb-1 headline">${uiTexts.learningOutcomes[currentLanguage]}</h4>
-                        <ul class="list-disc list-inside text-sm mb-3 body-text">${learningOutcomesList}</ul>
-                        
-                        ${literature ? `
-                        <h4 class="font-semibold tt-dark-blue mb-1 headline">${uiTexts.literature[currentLanguage]}</h4>
-                        <ul class="list-disc list-inside text-sm mb-3 body-text">${literatureList}</ul>` : ''}
-                        
-                        <div class="mt-4 text-sm">
-                            ${course.course_card_link ? `<a href="${course.course_card_link}" target="_blank" class="text-tt-magenta hover:underline mr-4"><i class="fas fa-link mr-1"></i>${uiTexts.courseCardLink[currentLanguage]}</a>` : ''}
-                            ${course.timetable_link ? `<a href="${course.timetable_link}" target="_blank" class="text-tt-magenta hover:underline"><i class="fas fa-calendar-alt mr-1"></i>${uiTexts.timetableLink[currentLanguage]}</a>` : ''}
+                    <div id="details-${courseCode}" class="expandable-content hidden p-4 border-t border-tt-grey-1 bg-gray-50">
+                        <div class="text-sm space-y-3">
+                            <div><strong>${currentLanguage === 'et' ? 'Kursuse info' : 'Course info'}:</strong></div>
+                            <div class="ml-4 space-y-1">
+                                <div><strong>${currentLanguage === 'et' ? 'Kood' : 'Code'}:</strong> ${courseCode}</div>
+                                <div><strong>${currentLanguage === 'et' ? 'Tüüp' : 'Type'}:</strong> ${courseType}</div>
+                                <div><strong>${currentLanguage === 'et' ? 'Õppejõud' : 'Instructor'}:</strong> ${instructor}</div>
+                                <div><strong>${currentLanguage === 'et' ? 'Rühmad' : 'Groups'}:</strong> ${groups}</div>
+                                ${course.ainekavaurl ? `<div class="mt-2">
+                                    <a href="${course.ainekavaurl}" target="_blank" class="text-tt-magenta hover:underline">
+                                        <i class="fas fa-external-link-alt mr-1"></i>${currentLanguage === 'et' ? 'Aine kava' : 'Course curriculum'}
+                                    </a>
+                                </div>` : ''}
+                            </div>
+                            
+                            <div><strong>${currentLanguage === 'et' ? 'Sessioonid' : 'Sessions'} (${course.sessions.length}):</strong></div>
+                            <div class="ml-4 space-y-2">
+                                ${course.sessions.map(session => `
+                                    <div class="bg-white p-3 rounded border">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <div class="font-medium">${formatDate(session.date)}</div>
+                                                <div class="text-xs text-gray-600">${session.start} - ${session.end}</div>
+                                                ${session.ruum ? `<div class="text-xs text-gray-600"><i class="fas fa-map-marker-alt mr-1"></i>${session.ruum}</div>` : ''}
+                                            </div>
+                                            <div class="text-xs text-gray-500">
+                                                ${session.oppenadalad ? `${currentLanguage === 'et' ? 'Nädal' : 'Week'} ${session.oppenadalad}` : ''}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
         }
 
+        function groupCoursesByCode(courses) {
+            const grouped = {};
+            courses.forEach(course => {
+                const key = course.ainekood;
+                if (!grouped[key]) {
+                    grouped[key] = {
+                        ...course,
+                        sessions: []
+                    };
+                }
+                grouped[key].sessions.push(course);
+            });
+            return Object.values(grouped);
+        }
+
         function renderCourses(coursesToRender) {
-            if (!courseListContainerDOM || !searchResultCountDOM) {
-                console.error("Core DOM elements for rendering courses are missing!");
+            if (currentView === 'weekly') {
+                renderWeeklyView(coursesToRender);
+                return;
+            }
+            
+            if (!courseListContainerDOM) {
+                console.error("courseListContainerDOM is not found!");
                 return;
             }
             courseListContainerDOM.innerHTML = '';
-            searchResultCountDOM.textContent = uiTexts.searchResultCountText[currentLanguage](coursesToRender.length); // Update result count
-
-            if (coursesToRender.length === 0) {
+            
+            // Group courses by unique course code
+            const groupedCourses = groupCoursesByCode(coursesToRender);
+            
+            // Update results counter
+            if (resultsCounterDOM) {
+                if (groupedCourses.length === 0) {
+                    resultsCounterDOM.textContent = currentLanguage === 'et' ? '0 kursust leitud' : '0 courses found';
+                } else {
+                    const sessionCount = coursesToRender.length;
+                    resultsCounterDOM.textContent = `${groupedCourses.length} ${currentLanguage === 'et' ? 'kursust' : 'courses'} (${sessionCount} ${currentLanguage === 'et' ? 'sessiooni' : 'sessions'})`;
+                }
+            }
+            
+            if (groupedCourses.length === 0) {
                 courseListContainerDOM.innerHTML = `<p class="text-center text-tt-grey-1 col-span-full">${uiTexts.noCoursesFound[currentLanguage]}</p>`;
                 return;
             }
-            coursesToRender.forEach(course => {
+            groupedCourses.forEach(course => {
                 const cardHTML = createCourseCardHTML(course);
                 courseListContainerDOM.insertAdjacentHTML('beforeend', cardHTML);
             });
             addExpandButtonListeners();
-            document.querySelectorAll('.expand-button span').forEach(span => {
-                const parentButton = span.closest('button');
+            document.querySelectorAll('.expand-button i').forEach(icon => {
+                const parentButton = icon.closest('button');
                 if (!parentButton) return;
                 const content = parentButton.closest('div.flex-col').querySelector('.expandable-content');
-                 if (!content) return;
+                if (!content) return;
                 const isHidden = content.classList.contains('hidden');
-                span.textContent = isHidden ? uiTexts.showMore[currentLanguage] : uiTexts.showLess[currentLanguage];
-                span.dataset.show = uiTexts.showMore[currentLanguage];
-                span.dataset.hide = uiTexts.showLess[currentLanguage];
+                if (!isHidden) {
+                    icon.classList.remove(icon.dataset.show);
+                    icon.classList.add(icon.dataset.hide);
+                } else {
+                    icon.classList.remove(icon.dataset.hide);
+                    icon.classList.add(icon.dataset.show);
+                }
             });
+        }
+
+        function renderWeeklyView(coursesToRender) {
+            if (!weeklyViewDOM || !resultsCounterDOM) return;
+            
+            // Update results counter
+            if (coursesToRender.length === 0) {
+                resultsCounterDOM.textContent = currentLanguage === 'et' ? '0 sessiooni leitud' : '0 sessions found';
+            } else {
+                resultsCounterDOM.textContent = `${coursesToRender.length} ${uiTexts.resultsFoundText[currentLanguage]}`;
+            }
+            
+            if (coursesToRender.length === 0) {
+                weeklyViewDOM.innerHTML = `<p class="text-center text-tt-grey-1">${uiTexts.noCoursesFound[currentLanguage]}</p>`;
+                return;
+            }
+
+            // Group sessions by week
+            const weekGroups = groupSessionsByWeek(coursesToRender);
+            
+            let weeklyHTML = '';
+            weekGroups.forEach(week => {
+                weeklyHTML += `
+                    <div class="mb-8 bg-white rounded-lg shadow-md border border-tt-grey-1 overflow-hidden">
+                        <div class="bg-tt-dark-blue text-white p-4">
+                            <h2 class="text-xl font-bold">${week.weekLabel}</h2>
+                            <p class="text-sm opacity-80">${week.dateRange}</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-0">
+                            ${renderWeekDays(week.days)}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            weeklyViewDOM.innerHTML = weeklyHTML;
+        }
+
+        function groupSessionsByWeek(sessions) {
+            const weekGroups = {};
+            const weekDays = ['Esmaspäev', 'Teisipäev', 'Kolmapäev', 'Neljapäev', 'Reede', 'Laupäev', 'Pühapäev'];
+            const weekDaysEn = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            
+            sessions.forEach(session => {
+                if (!session.date) return;
+                
+                const [day, month, year] = session.date.split('.');
+                const date = new Date(year, month - 1, day);
+                const weekNumber = getWeekNumber(date);
+                const yearWeek = `${date.getFullYear()}-W${weekNumber}`;
+                
+                if (!weekGroups[yearWeek]) {
+                    weekGroups[yearWeek] = {
+                        weekNumber,
+                        year: date.getFullYear(),
+                        weekLabel: currentLanguage === 'et' ? `${weekNumber}. nädal` : `Week ${weekNumber}`,
+                        dateRange: getWeekDateRange(date),
+                        days: {}
+                    };
+                    
+                    // Initialize all weekdays
+                    for (let i = 0; i < 5; i++) { // Only weekdays (Mon-Fri)
+                        const dayName = currentLanguage === 'et' ? weekDays[i] : weekDaysEn[i];
+                        weekGroups[yearWeek].days[dayName] = [];
+                    }
+                }
+                
+                const dayOfWeek = date.getDay();
+                const adjustedDay = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Convert Sunday (0) to 6, others -1
+                
+                if (adjustedDay < 5) { // Only weekdays
+                    const dayName = currentLanguage === 'et' ? weekDays[adjustedDay] : weekDaysEn[adjustedDay];
+                    weekGroups[yearWeek].days[dayName].push(session);
+                }
+            });
+            
+            return Object.values(weekGroups).sort((a, b) => {
+                if (a.year !== b.year) return a.year - b.year;
+                return a.weekNumber - b.weekNumber;
+            });
+        }
+
+        function getWeekNumber(date) {
+            const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+            const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+            return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+        }
+
+        function getWeekDateRange(date) {
+            const monday = new Date(date);
+            monday.setDate(date.getDate() - (date.getDay() + 6) % 7);
+            const friday = new Date(monday);
+            friday.setDate(monday.getDate() + 4);
+            
+            const formatDate = (d) => {
+                return d.toLocaleDateString(currentLanguage === 'et' ? 'et-EE' : 'en-GB', { 
+                    day: '2-digit', 
+                    month: '2-digit' 
+                });
+            };
+            
+            return `${formatDate(monday)} - ${formatDate(friday)}`;
+        }
+
+        function renderWeekDays(days) {
+            const weekDays = ['Esmaspäev', 'Teisipäev', 'Kolmapäev', 'Neljapäev', 'Reede'];
+            const weekDaysEn = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+            const dayNames = currentLanguage === 'et' ? weekDays : weekDaysEn;
+            
+            return dayNames.map(dayName => {
+                const sessions = days[dayName] || [];
+                return `
+                    <div class="border-r border-gray-200 last:border-r-0">
+                        <div class="bg-gray-50 p-3 text-center font-semibold text-sm text-tt-dark-blue border-b border-gray-200">
+                            ${dayName}
+                        </div>
+                        <div class="p-2 min-h-[200px]">
+                            ${sessions.map(session => createWeeklySessionCard(session)).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function createWeeklySessionCard(session) {
+            const roomText = session.ruum ? `<div class="text-xs text-gray-600 truncate"><i class="fas fa-map-marker-alt mr-1"></i>${session.ruum}</div>` : '';
+            
+            return `
+                <div class="mb-2 p-2 bg-white border border-gray-200 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-xs font-semibold text-tt-magenta truncate">${session.ainekood}</div>
+                    <div class="text-xs text-tt-dark-blue font-medium mb-1 truncate">${session.aine}</div>
+                    <div class="text-xs text-gray-600 mb-1">${session.start} - ${session.end}</div>
+                    ${roomText}
+                    <div class="text-xs text-gray-500 truncate">${session.oppejoud || ''}</div>
+                </div>
+            `;
+        }
+
+        function switchView(view) {
+            currentView = view;
+            
+            if (view === 'cards') {
+                courseListContainerDOM.classList.remove('hidden');
+                weeklyViewDOM.classList.add('hidden');
+                cardViewBtnDOM.classList.add('bg-white', 'text-tt-dark-blue', 'shadow-sm');
+                cardViewBtnDOM.classList.remove('text-gray-600');
+                weekViewBtnDOM.classList.remove('bg-white', 'text-tt-dark-blue', 'shadow-sm');
+                weekViewBtnDOM.classList.add('text-gray-600');
+            } else {
+                courseListContainerDOM.classList.add('hidden');
+                weeklyViewDOM.classList.remove('hidden');
+                weekViewBtnDOM.classList.add('bg-white', 'text-tt-dark-blue', 'shadow-sm');
+                weekViewBtnDOM.classList.remove('text-gray-600');
+                cardViewBtnDOM.classList.remove('bg-white', 'text-tt-dark-blue', 'shadow-sm');
+                cardViewBtnDOM.classList.add('text-gray-600');
+            }
+            
+            // Re-render with current filtered courses
+            renderCourses(filteredCourses);
         }
         
         function addExpandButtonListeners() {
@@ -507,12 +801,12 @@
                     content.classList.toggle('hidden');
                     button.setAttribute('aria-expanded', String(!isCurrentlyHidden));
 
-                    if (!isCurrentlyHidden) { 
-                        icon.classList.remove('fa-plus'); icon.classList.add('fa-minus');
-                        span.textContent = span.dataset.hide;
+                    if (isCurrentlyHidden) { 
+                        icon.classList.remove(icon.dataset.show); 
+                        icon.classList.add(icon.dataset.hide);
                     } else { 
-                        icon.classList.remove('fa-minus'); icon.classList.add('fa-plus');
-                        span.textContent = span.dataset.show;
+                        icon.classList.remove(icon.dataset.hide); 
+                        icon.classList.add(icon.dataset.show);
                     }
                 });
                 button.dataset.listenerAttached = 'true';
@@ -532,51 +826,45 @@
                 const searchTermLower = activeFilters.searchTerm.toLowerCase();
 
                 if (activeFilters.searchTerm) {
-                    tempFilteredCourses = tempFilteredCourses.filter(course => {
+                    tempFilteredCourses = tempFilteredCourses.filter(session => {
                         switch (activeFilters.searchFieldType) {
                             case 'title':
-                                return (course.name_et && course.name_et.toLowerCase().includes(searchTermLower)) ||
-                                       (course.name_en && course.name_en.toLowerCase().includes(searchTermLower));
+                                return (session.aine && session.aine.toLowerCase().includes(searchTermLower));
                             case 'course_id':
-                                return course.id && course.id.toLowerCase().includes(searchTermLower);
+                                return session.ainekood && session.ainekood.toLowerCase().includes(searchTermLower);
                             case 'keyword':
-                                return (course.keywords_et && course.keywords_et.some(kw => kw.toLowerCase().includes(searchTermLower))) ||
-                                       (course.keywords_en && course.keywords_en.some(kw => kw.toLowerCase().includes(searchTermLower))) ||
-                                       (course.interests && course.interests.some(i => i.toLowerCase().includes(searchTermLower)));
+                                return (session.oppejoud && session.oppejoud.toLowerCase().includes(searchTermLower)) ||
+                                       (session.tyyp && session.tyyp.toLowerCase().includes(searchTermLower)) ||
+                                       (session.ryhmad && session.ryhmad.toLowerCase().includes(searchTermLower));
                             case 'all':
                             default:
-                                return (course.id && course.id.toLowerCase().includes(searchTermLower)) ||
-                                       (course.name_et && course.name_et.toLowerCase().includes(searchTermLower)) ||
-                                       (course.name_en && course.name_en.toLowerCase().includes(searchTermLower)) ||
-                                       (course.description_short_et && course.description_short_et.toLowerCase().includes(searchTermLower)) ||
-                                       (course.description_short_en && course.description_short_en.toLowerCase().includes(searchTermLower)) ||
-                                       (course.keywords_et && course.keywords_et.some(kw => kw.toLowerCase().includes(searchTermLower))) ||
-                                       (course.keywords_en && course.keywords_en.some(kw => kw.toLowerCase().includes(searchTermLower))) ||
-                                       (course.interests && course.interests.some(i => i.toLowerCase().includes(searchTermLower)));
+                                return (session.ainekood && session.ainekood.toLowerCase().includes(searchTermLower)) ||
+                                       (session.aine && session.aine.toLowerCase().includes(searchTermLower)) ||
+                                       (session.oppejoud && session.oppejoud.toLowerCase().includes(searchTermLower)) ||
+                                       (session.tyyp && session.tyyp.toLowerCase().includes(searchTermLower)) ||
+                                       (session.ryhmad && session.ryhmad.toLowerCase().includes(searchTermLower)) ||
+                                       (session.ruum && session.ruum.toLowerCase().includes(searchTermLower));
                         }
                     });
                 }
+                // Filter by course type (using school filter dropdown)
                 if (activeFilters.school) {
-                    tempFilteredCourses = tempFilteredCourses.filter(course => course.school_code === activeFilters.school);
+                    tempFilteredCourses = tempFilteredCourses.filter(session => session.tyyp === activeFilters.school);
                 }
+                // Filter by week (using institute filter dropdown)
                 if (activeFilters.institute) {
-                    tempFilteredCourses = tempFilteredCourses.filter(course => course.institute_name === activeFilters.institute);
+                    tempFilteredCourses = tempFilteredCourses.filter(session => session.oppenadalad === activeFilters.institute);
                 }
-                if (activeFilters.eap) { 
-                    const eapValue = parseInt(activeFilters.eap);
-                    tempFilteredCourses = tempFilteredCourses.filter(course => course.eap === eapValue);
-                }
+                // Filter by instructor (using assessmentForm filter dropdown)
                 if(activeFilters.assessmentForm) {
-                    tempFilteredCourses = tempFilteredCourses.filter(course => course.assessment_form_et === activeFilters.assessmentForm);
+                    tempFilteredCourses = tempFilteredCourses.filter(session => session.oppejoud === activeFilters.assessmentForm);
                 }
                 
                 const langFilter = activeFilters.teachingLanguage;
                 if (langFilter === 'et') { 
-                    tempFilteredCourses = tempFilteredCourses.filter(course => course.keel_et === "1" && course.keel_en !== "1");
+                    tempFilteredCourses = tempFilteredCourses.filter(session => session.keel === "Eesti keel");
                 } else if (langFilter === 'en') { 
-                    tempFilteredCourses = tempFilteredCourses.filter(course => course.keel_en === "1" && course.keel_et !== "1");
-                } else if (langFilter === 'et+en') { 
-                    tempFilteredCourses = tempFilteredCourses.filter(course => course.keel_et === "1" && course.keel_en === "1");
+                    tempFilteredCourses = tempFilteredCourses.filter(session => session.keel === "English");
                 } 
                 
                 filteredCourses = tempFilteredCourses;
@@ -590,82 +878,63 @@
                 console.error("Filter select elements not found for populating.");
                 return;
             }
-            const schools = [...new Map(allCourses.map(course => [course.school_code, {code: course.school_code, name: course.school_name}])).values()];
+            
+            // For the new schedule data, we can populate with course types instead of schools
+            const courseTypes = [...new Set(allCourses.map(session => session.tyyp).filter(Boolean))].sort();
             const currentSchoolValue = schoolFilterDOM.value;
-            schoolFilterDOM.innerHTML = `<option value="">${uiTexts.allSchools[currentLanguage]}</option>`; 
-            schools.sort((a,b) => (a.name || "").localeCompare(b.name || "")).forEach(school => {
-                if(school.code && school.name) { 
-                    schoolFilterDOM.add(new Option(school.name, school.code));
-                }
+            schoolFilterDOM.innerHTML = `<option value="">${currentLanguage === 'et' ? 'Kõik tüübid' : 'All types'}</option>`; 
+            courseTypes.forEach(type => {
+                schoolFilterDOM.add(new Option(type, type));
             });
             schoolFilterDOM.value = currentSchoolValue;
-            updateInstituteFilter(currentSchoolValue);
 
-            const assessmentForms = [...new Set(allCourses.map(c => c.assessment_form_et).filter(Boolean))].sort(
-                (a, b) => a.localeCompare(b, currentLanguage === 'et' ? 'et' : 'en', { sensitivity: 'base' })
-            );
+            // Populate instructors instead of assessment forms
+            const instructors = [...new Set(allCourses.map(session => session.oppejoud).filter(Boolean))].sort();
             const currentAssessmentFormValue = assessmentFormFilterDOM.value;
-            assessmentFormFilterDOM.innerHTML = `<option value="">${uiTexts.allAssessmentForms[currentLanguage]}</option>`;
-            assessmentForms.forEach(form => {
-                assessmentFormFilterDOM.add(new Option(form, form));
+            assessmentFormFilterDOM.innerHTML = `<option value="">${currentLanguage === 'et' ? 'Kõik õppejõud' : 'All instructors'}</option>`;
+            instructors.forEach(instructor => {
+                assessmentFormFilterDOM.add(new Option(instructor, instructor));
             });
             assessmentFormFilterDOM.value = currentAssessmentFormValue;
         }
 
-        function updateInstituteFilter(selectedSchoolCode) {
+        function updateInstituteFilter(selectedCourseType) {
             if (!instituteFilterDOM) {
                 console.error("Institute filter DOM not found.");
                 return;
             }
             const currentInstituteValue = instituteFilterDOM.value;
-            instituteFilterDOM.innerHTML = `<option value="">${selectedSchoolCode ? uiTexts.selectInstitute[currentLanguage] : uiTexts.allInstitutes[currentLanguage]}</option>`;
+            instituteFilterDOM.innerHTML = `<option value="">${currentLanguage === 'et' ? 'Kõik nädalad' : 'All weeks'}</option>`;
             
-            if (selectedSchoolCode) {
-                const institutesForSchool = [...new Set(
-                    allCourses
-                        .filter(course => course.school_code === selectedSchoolCode && course.institute_name)
-                        .map(course => course.institute_name)
-                )].sort(
-                     (a, b) => a.localeCompare(b, currentLanguage === 'et' ? 'et' : 'en', { sensitivity: 'base' })
-                );
-
-                institutesForSchool.forEach(institute => {
-                    instituteFilterDOM.add(new Option(institute, institute));
-                });
-                instituteFilterDOM.disabled = institutesForSchool.length === 0;
-                if (institutesForSchool.includes(currentInstituteValue)) {
-                    instituteFilterDOM.value = currentInstituteValue;
-                } else {
-                    activeFilters.institute = ''; 
-                    instituteFilterDOM.value = "";
-                }
-            } else { 
-                const allInstitutesList = [...new Set(allCourses.map(course => course.institute_name).filter(Boolean))].sort(
-                     (a, b) => a.localeCompare(b, currentLanguage === 'et' ? 'et' : 'en', { sensitivity: 'base' })
-                );
-                 allInstitutesList.forEach(institute => {
-                    instituteFilterDOM.add(new Option(institute, institute));
-                });
-                instituteFilterDOM.disabled = false; 
-                if (allInstitutesList.includes(currentInstituteValue)) {
-                     instituteFilterDOM.value = currentInstituteValue;
-                } else {
-                     activeFilters.institute = '';
-                     instituteFilterDOM.value = "";
-                }
+            // Populate with week numbers for schedule filtering
+            const weeks = [...new Set(allCourses.map(session => session.oppenadalad).filter(Boolean))].sort((a, b) => parseInt(a) - parseInt(b));
+            weeks.forEach(week => {
+                const label = currentLanguage === 'et' ? `Nädal ${week}` : `Week ${week}`;
+                instituteFilterDOM.add(new Option(label, week));
+            });
+            instituteFilterDOM.disabled = false;
+            
+            if (weeks.includes(currentInstituteValue)) {
+                instituteFilterDOM.value = currentInstituteValue;
+            } else {
+                activeFilters.institute = ''; 
+                instituteFilterDOM.value = "";
             }
         }
         
         function compileUniqueSearchableTerms() {
             uniqueSearchableTerms.clear();
-            allCourses.forEach(course => {
-                if (course.id) uniqueSearchableTerms.add(course.id);
-                if (course.name_et) uniqueSearchableTerms.add(course.name_et);
-                if (course.name_en) uniqueSearchableTerms.add(course.name_en);
-                (course.keywords_et || []).forEach(kw => uniqueSearchableTerms.add(kw));
-                (course.keywords_en || []).forEach(kw => uniqueSearchableTerms.add(kw));
-                (course.interests || []).forEach(interest => uniqueSearchableTerms.add(interest));
+            allCourses.forEach(session => {
+                if (session.ainekood) uniqueSearchableTerms.add(session.ainekood);
+                if (session.aine) uniqueSearchableTerms.add(session.aine);
+                if (session.oppejoud) uniqueSearchableTerms.add(session.oppejoud);
+                if (session.tyyp) uniqueSearchableTerms.add(session.tyyp);
+                if (session.ruum) uniqueSearchableTerms.add(session.ruum);
+                if (session.ryhmad) {
+                    session.ryhmad.split(',').forEach(group => uniqueSearchableTerms.add(group.trim()));
+                }
             });
+            console.log("Compiled unique searchable terms:", uniqueSearchableTerms.size);
         }
 
         function escapeRegExp(string) {
@@ -758,18 +1027,18 @@
         function renderActiveFiltersDisplay() {
             if (!activeFiltersDisplayDOM) return;
             activeFiltersDisplayDOM.innerHTML = '';
-            let hasAnyFilterApplied = false; // Use a more descriptive name
+            let hasActiveFilter = false;
             const pillsHTML = [];
 
             if (activeFilters.searchTerm) {
-                hasAnyFilterApplied = true;
+                hasActiveFilter = true;
                 let fieldLabel = uiTexts[`searchField_${activeFilters.searchFieldType}`] ? uiTexts[`searchField_${activeFilters.searchFieldType}`][currentLanguage] : activeFilters.searchFieldType;
                 pillsHTML.push(`<span class="filter-pill">${fieldLabel}: "${activeFilters.searchTerm}" 
                                 <button class="filter-pill-remove" data-filtertype="searchTerm" aria-label="Eemalda otsingusõna">&times;</button>
                                </span>`);
             }
             if (activeFilters.school && schoolFilterDOM) {
-                hasAnyFilterApplied = true;
+                hasActiveFilter = true;
                 const schoolOption = Array.from(schoolFilterDOM.options).find(opt => opt.value === activeFilters.school);
                 const schoolName = schoolOption ? schoolOption.textContent : activeFilters.school;
                 pillsHTML.push(`<span class="filter-pill">${uiTexts.schoolFilterLabel[currentLanguage]}: ${schoolName} 
@@ -777,7 +1046,7 @@
                                </span>`);
             }
             if (activeFilters.institute && instituteFilterDOM) {
-                 hasAnyFilterApplied = true;
+                 hasActiveFilter = true;
                  const instituteOption = Array.from(instituteFilterDOM.options).find(opt => opt.value === activeFilters.institute);
                  const instituteName = instituteOption ? instituteOption.textContent : activeFilters.institute;
                  pillsHTML.push(`<span class="filter-pill">${uiTexts.instituteFilterLabel[currentLanguage]}: ${instituteName}
@@ -785,33 +1054,40 @@
                                 </span>`);
             }
             if (activeFilters.eap) {
-                hasAnyFilterApplied = true;
+                hasActiveFilter = true;
                 pillsHTML.push(`<span class="filter-pill">${uiTexts.eapFilterLabel[currentLanguage]}: ${activeFilters.eap} EAP
                                 <button class="filter-pill-remove" data-filtertype="eap" aria-label="Eemalda EAP filter">&times;</button>
                                </span>`);
             }
             if (activeFilters.assessmentForm && assessmentFormFilterDOM) {
-                hasAnyFilterApplied = true;
+                hasActiveFilter = true;
                  const formOption = Array.from(assessmentFormFilterDOM.options).find(opt => opt.value === activeFilters.assessmentForm);
                  const formName = formOption ? formOption.textContent : activeFilters.assessmentForm;
                 pillsHTML.push(`<span class="filter-pill">${uiTexts.assessmentFormFilterLabel[currentLanguage]}: ${formName}
                                 <button class="filter-pill-remove" data-filtertype="assessmentForm" aria-label="Eemalda hindamisvormi filter">&times;</button>
                                </span>`);
             }
-            if (activeFilters.teachingLanguage) { // This will be true if a specific lang (not "") is selected
-                hasAnyFilterApplied = true;
+            if (activeFilters.teachingLanguage) { 
+                hasActiveFilter = true;
                 let langLabel = '';
                 if (activeFilters.teachingLanguage === 'et') langLabel = uiTexts.langEtLabel[currentLanguage];
                 else if (activeFilters.teachingLanguage === 'en') langLabel = uiTexts.langEnLabel[currentLanguage];
                 else if (activeFilters.teachingLanguage === 'et+en') langLabel = uiTexts.langEtEnLabel[currentLanguage];
-                // No need for "All" as "" teachingLanguage means no pill for it.
+                // No need for fallback to "All" here, as "" means no language filter active for display
                 
-                pillsHTML.push(`<span class="filter-pill">${uiTexts.languageFilterLabel[currentLanguage]}: ${langLabel}
-                                <button class="filter-pill-remove" data-filtertype="teachingLanguage" aria-label="Eemalda õppekeele filter">&times;</button>
-                               </span>`);
+                if (activeFilters.teachingLanguage !== "") { // Only show pill if not "All"
+                    pillsHTML.push(`<span class="filter-pill">${uiTexts.languageFilterLabel[currentLanguage]}: ${langLabel}
+                                    <button class="filter-pill-remove" data-filtertype="teachingLanguage" aria-label="Eemalda õppekeele filter">&times;</button>
+                                </span>`);
+                } else { // If it was the only active filter, and now it's "" (All), recalculate hasActiveFilter
+                    hasActiveFilter = Object.values(activeFilters).some((val, index) => {
+                        // Check if any other filter (not teachingLanguage, which is now "") is active
+                        return index !== Object.keys(activeFilters).indexOf('teachingLanguage') && val !== '' && val !== 'all';
+                    });
+                }
             }
 
-            if (hasAnyFilterApplied) {
+            if (hasActiveFilter) {
                 activeFiltersDisplayDOM.innerHTML = `
                     <div class="flex flex-wrap items-center mb-2">
                         <strong class="mr-2 body-text">${uiTexts.activeFiltersHeader[currentLanguage]}</strong>
@@ -887,8 +1163,18 @@
         }
         
         function setupEventListeners() {
+            console.log("Setting up event listeners...");
             if (languageToggleDOM) languageToggleDOM.addEventListener('click', () => {
                 setLanguage(currentLanguage === 'et' ? 'en' : 'et');
+            });
+
+            // View toggle buttons
+            if (cardViewBtnDOM) cardViewBtnDOM.addEventListener('click', () => {
+                switchView('cards');
+            });
+            
+            if (weekViewBtnDOM) weekViewBtnDOM.addEventListener('click', () => {
+                switchView('weekly');
             });
 
             if (searchInputDOM) {
@@ -915,7 +1201,7 @@
                 activeFilters.searchTerm = '';
                 activeFilters.searchFieldType = 'all';
                 hideSuggestions();
-                clearAllFilters(); // Reset all other filters too for a full reset
+                applyAllFiltersAndRenderDisplay();
             });
             
             document.addEventListener('click', (e) => {
@@ -960,10 +1246,10 @@
                 const isOpen = filterPanelDOM.classList.toggle('filter-drawer-open');
                 const icon = filterToggleButtonDOM.querySelector('i');
                 if (isOpen) {
-                    icon.classList.remove('fa-filter'); icon.classList.add('fa-times');
+                    icon.classList.remove('fa-bars'); icon.classList.add('fa-times');
                     filterToggleButtonDOM.setAttribute('aria-label', uiTexts.filterToggleButtonLabelClose[currentLanguage]);
                 } else {
-                    icon.classList.remove('fa-times'); icon.classList.add('fa-filter');
+                    icon.classList.remove('fa-times'); icon.classList.add('fa-bars');
                     filterToggleButtonDOM.setAttribute('aria-label', uiTexts.filterToggleButtonLabelOpen[currentLanguage]);
                 }
             });
@@ -971,26 +1257,1094 @@
                  if (!filterPanelDOM || !filterToggleButtonDOM) return;
                 filterPanelDOM.classList.remove('filter-drawer-open');
                 const icon = filterToggleButtonDOM.querySelector('i');
-                icon.classList.remove('fa-times'); icon.classList.add('fa-filter');
+                icon.classList.remove('fa-times'); icon.classList.add('fa-bars');
                 filterToggleButtonDOM.setAttribute('aria-label', uiTexts.filterToggleButtonLabelOpen[currentLanguage]);
             });
+             console.log("Event listeners setup complete.");
+        }
+
+        function setupCalendarEventListeners() {
+            console.log("Setting up calendar event listeners...");
+            
+            // Listen for course selection changes
+            document.addEventListener('change', (e) => {
+                if (e.target.classList.contains('course-selector')) {
+                    handleCourseSelection(e.target);
+                }
+            });
+
+            // Calendar creation button
+            if (createCalendarButtonDOM) {
+                createCalendarButtonDOM.addEventListener('click', showCalendarModal);
+            }
+
+            // Modal event listeners
+            const calendarModal = document.getElementById('calendarModal');
+            const closeCalendarModal = document.getElementById('closeCalendarModal');
+            const cancelCalendarBtn = document.getElementById('cancelCalendarBtn');
+            const downloadCalendarBtn = document.getElementById('downloadCalendarBtn');
+
+            if (closeCalendarModal) {
+                closeCalendarModal.addEventListener('click', hideCalendarModal);
+            }
+            if (cancelCalendarBtn) {
+                cancelCalendarBtn.addEventListener('click', hideCalendarModal);
+            }
+            if (downloadCalendarBtn) {
+                downloadCalendarBtn.addEventListener('click', downloadCalendar);
+            }
+            if (calendarModal) {
+                calendarModal.addEventListener('click', (e) => {
+                    if (e.target === calendarModal) {
+                        hideCalendarModal();
+                    }
+                });
+            }
+        }
+
+        function handleCourseSelection(checkbox) {
+            const courseId = checkbox.getAttribute('data-course-id');
+            const courseData = JSON.parse(checkbox.getAttribute('data-course-data'));
+            
+            if (checkbox.checked) {
+                selectedCourses.add(courseId);
+            } else {
+                selectedCourses.delete(courseId);
+            }
+            
+            updateCalendarButtonVisibility();
+        }
+
+        function updateCalendarButtonVisibility() {
+            const count = selectedCourses.size;
+            if (selectedCountDOM) {
+                selectedCountDOM.textContent = count;
+            }
+            
+            if (createCalendarButtonDOM) {
+                if (count > 0) {
+                    createCalendarButtonDOM.classList.remove('hidden');
+                } else {
+                    createCalendarButtonDOM.classList.add('hidden');
+                }
+            }
+        }
+
+        function showCalendarModal() {
+            if (selectedCourses.size === 0) {
+                alert(currentLanguage === 'et' ? 'Palun vali vähemalt üks kursus.' : 'Please select at least one course.');
+                return;
+            }
+
+            // Get selected course data
+            const selectedCourseData = [];
+            selectedCourses.forEach(courseId => {
+                const checkbox = document.querySelector(`[data-course-id="${courseId}"]`);
+                if (checkbox) {
+                    const courseData = JSON.parse(checkbox.getAttribute('data-course-data'));
+                    selectedCourseData.push(courseData);
+                }
+            });
+
+            generateCalendarView(selectedCourseData);
+            document.getElementById('calendarModal').classList.remove('hidden');
+        }
+
+        function hideCalendarModal() {
+            document.getElementById('calendarModal').classList.add('hidden');
+        }
+
+        function generateCalendarView(courses) {
+            const calendarView = document.getElementById('calendarView');
+            const calendarCourseCount = document.getElementById('calendarCourseCount');
+            
+            // Count total sessions
+            const totalSessions = courses.reduce((sum, course) => sum + course.sessions.length, 0);
+            
+            if (calendarCourseCount) {
+                calendarCourseCount.textContent = `${courses.length} ${currentLanguage === 'et' ? 'kursust' : 'courses'}, ${totalSessions} ${currentLanguage === 'et' ? 'sessiooni' : 'sessions'}`;
+            }
+
+            // Group sessions by date
+            const sessionsByDate = {};
+            courses.forEach(course => {
+                course.sessions.forEach(session => {
+                    const date = session.date;
+                    if (!sessionsByDate[date]) {
+                        sessionsByDate[date] = [];
+                    }
+                    sessionsByDate[date].push({
+                        ...session,
+                        courseName: course.aine,
+                        courseCode: course.ainekood
+                    });
+                });
+            });
+
+            // Sort dates
+            const sortedDates = Object.keys(sessionsByDate).sort((a, b) => {
+                const [dayA, monthA, yearA] = a.split('.');
+                const [dayB, monthB, yearB] = b.split('.');
+                return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
+            });
+
+            // Generate calendar HTML
+            let calendarHTML = '';
+            sortedDates.forEach(date => {
+                const [day, month, year] = date.split('.');
+                const dateObj = new Date(year, month - 1, day);
+                const dayName = currentLanguage === 'et' 
+                    ? dateObj.toLocaleDateString('et-EE', { weekday: 'long' })
+                    : dateObj.toLocaleDateString('en-GB', { weekday: 'long' });
+                const formattedDate = currentLanguage === 'et'
+                    ? dateObj.toLocaleDateString('et-EE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                    : dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+                const sessions = sessionsByDate[date].sort((a, b) => a.start.localeCompare(b.start));
+
+                calendarHTML += `
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <div class="bg-tt-dark-blue text-white p-3">
+                            <h3 class="font-bold text-lg">${dayName}</h3>
+                            <p class="text-sm opacity-90">${formattedDate}</p>
+                        </div>
+                        <div class="p-3 space-y-2">
+                            ${sessions.map(session => `
+                                <div class="bg-gray-50 p-3 rounded border-l-4 border-tt-magenta">
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex-grow">
+                                            <h4 class="font-semibold text-tt-dark-blue">${session.courseName}</h4>
+                                            <p class="text-sm text-gray-600">${session.courseCode} - ${session.tyyp}</p>
+                                            ${session.oppejoud ? `<p class="text-sm text-gray-600"><i class="fas fa-user mr-1"></i>${session.oppejoud}</p>` : ''}
+                                            ${session.ruum ? `<p class="text-sm text-gray-600"><i class="fas fa-map-marker-alt mr-1"></i>${session.ruum}</p>` : ''}
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="font-semibold text-tt-magenta">${session.start} - ${session.end}</p>
+                                            ${session.oppenadalad ? `<p class="text-xs text-gray-500">${currentLanguage === 'et' ? 'Nädal' : 'Week'} ${session.oppenadalad}</p>` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            calendarView.innerHTML = calendarHTML;
+        }
+
+        function downloadCalendar() {
+            // Get selected course data
+            const selectedCourseData = [];
+            selectedCourses.forEach(courseId => {
+                const checkbox = document.querySelector(`[data-course-id="${courseId}"]`);
+                if (checkbox) {
+                    const courseData = JSON.parse(checkbox.getAttribute('data-course-data'));
+                    selectedCourseData.push(courseData);
+                }
+            });
+
+            // Generate ICS calendar file
+            const icsContent = generateICS(selectedCourseData);
+            
+            // Download the file
+            downloadCalendarFile(icsContent);
+            
+            // Hide modal after download
+            hideCalendarModal();
+        }
+
+        function generateICS(courses) {
+            const now = new Date();
+            const timeStamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+            
+            let ics = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//TalTech//Course Calendar//EN',
+                'CALSCALE:GREGORIAN',
+                'METHOD:PUBLISH',
+                `X-WR-CALNAME:TalTech Courses ${currentLanguage === 'et' ? 'Sügis' : 'Autumn'} 2025`,
+                'X-WR-TIMEZONE:Europe/Tallinn'
+            ];
+
+            // Add all sessions from selected courses
+            courses.forEach((course) => {
+                course.sessions.forEach((session, index) => {
+                    const eventId = `course-${session.ainekood}-${session.date}-${session.start}-${index}@taltech.ee`;
+                    const startDateTime = formatDateTimeForICS(session.date, session.start);
+                    const endDateTime = formatDateTimeForICS(session.date, session.end);
+                    
+                    ics.push('BEGIN:VEVENT');
+                    ics.push(`UID:${eventId}`);
+                    ics.push(`DTSTAMP:${timeStamp}`);
+                    ics.push(`DTSTART:${startDateTime}`);
+                    ics.push(`DTEND:${endDateTime}`);
+                    ics.push(`SUMMARY:${session.aine} (${session.ainekood})`);
+                    
+                    let description = `${currentLanguage === 'et' ? 'Tüüp' : 'Type'}: ${session.tyyp}\\n`;
+                    if (session.oppejoud) description += `${currentLanguage === 'et' ? 'Õppejõud' : 'Instructor'}: ${session.oppejoud}\\n`;
+                    if (session.ryhmad) description += `${currentLanguage === 'et' ? 'Rühmad' : 'Groups'}: ${session.ryhmad}\\n`;
+                    if (session.oppenadalad) description += `${currentLanguage === 'et' ? 'Õppenädal' : 'Study week'}: ${session.oppenadalad}`;
+                    
+                    ics.push(`DESCRIPTION:${description}`);
+                    
+                    if (session.ruum) {
+                        ics.push(`LOCATION:${session.ruum}`);
+                    }
+                    
+                    ics.push('STATUS:CONFIRMED');
+                    ics.push('TRANSP:OPAQUE');
+                    ics.push('END:VEVENT');
+                });
+            });
+
+            ics.push('END:VCALENDAR');
+            return ics.join('\r\n');
+        }
+
+        function formatDateTimeForICS(dateStr, timeStr) {
+            if (!dateStr || !timeStr) return '';
+            
+            // Parse date (DD.MM.YYYY)
+            const [day, month, year] = dateStr.split('.');
+            
+            // Parse time (HH:MM)
+            const [hours, minutes] = timeStr.split(':');
+            
+            // Create ISO date string in Tallinn timezone
+            const date = new Date(year, month - 1, day, parseInt(hours), parseInt(minutes));
+            
+            // Format as YYYYMMDDTHHMMSS (local time)
+            const formatted = date.getFullYear() + 
+                             String(date.getMonth() + 1).padStart(2, '0') + 
+                             String(date.getDate()).padStart(2, '0') + 'T' +
+                             String(date.getHours()).padStart(2, '0') + 
+                             String(date.getMinutes()).padStart(2, '0') + 
+                             String(date.getSeconds()).padStart(2, '0');
+            
+            return formatted;
+        }
+
+        function downloadCalendarFile(icsContent) {
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `taltech-courses-${currentLanguage === 'et' ? 'sugis' : 'autumn'}-2025.ics`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+            
+            // Show success message
+            const totalSessions = Array.from(selectedCourses).reduce((sum, courseId) => {
+                const checkbox = document.querySelector(`[data-course-id="${courseId}"]`);
+                if (checkbox) {
+                    const courseData = JSON.parse(checkbox.getAttribute('data-course-data'));
+                    return sum + courseData.sessions.length;
+                }
+                return sum;
+            }, 0);
+            
+            const message = currentLanguage === 'et' ? 
+                `Kalender loodud! Laetud alla ${selectedCourses.size} kursust (${totalSessions} sessiooni).` :
+                `Calendar created! Downloaded ${selectedCourses.size} courses (${totalSessions} sessions).`;
+            alert(message);
         }
 
         async function initializeApp() {
+            console.log("Initializing app...");
             if (loadingIndicatorDOM) loadingIndicatorDOM.classList.remove('hidden');
             try {
-                const response = await fetch('courses.json'); 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}, File: courses.json`);
-                }
-                allCourses = await response.json();
+                // Embed data directly to avoid file:// protocol issues
+                allCourses = [
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Viktor Rjabtšikov(lektor)",
+    "oppenadalad": "1",
+    "ryhmad": "EDJR54_V,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/EVR0230",
+    "tpg": "EDJR55_V",
+    "date": "06.09.2025",
+    "ainekood": "EVR0230",
+    "aine": "MATLAB ja numbrilised meetodid",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+praktikum+harjutus",
+    "oppejoud": "Tatjana Baraškova(vanemlektor)",
+    "oppenadalad": "1",
+    "ryhmad": "EDJR54_V,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/RAE0900",
+    "tpg": "EDJR55_V",
+    "date": "07.09.2025",
+    "ainekood": "RAE0900",
+    "aine": "Hüdro- ja pneumoajam",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Andres Koppel(lektor)",
+    "oppenadalad": "2",
+    "ryhmad": "EDJR35,EDJR55_V,EDJR75",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/RAA0470",
+    "tpg": "EDJR55_V",
+    "date": "13.09.2025",
+    "ainekood": "RAA0470",
+    "aine": "Elektrijaamad",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Viktor Rjabtšikov(lektor)",
+    "oppenadalad": "3",
+    "ryhmad": "EDJR54_V,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/EVR0230",
+    "tpg": "EDJR55_V",
+    "date": "20.09.2025",
+    "ainekood": "EVR0230",
+    "aine": "MATLAB ja numbrilised meetodid",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng",
+    "oppejoud": "Kristjan Liivamägi(vanemlektor)|",
+    "ruum": "SOC-209",
+    "oppenadalad": "7",
+    "ryhmad": "HAAB51,IABB51,IABB52,IABB53,TAAB31,TAAB32,TABB31,TABB32,TABB33,TABB34,TABB35,TABB36",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/TER0440",
+    "tpg": "HAAB51",
+    "date": "15.10.2025",
+    "ainekood": "TER0440",
+    "aine": "Rahanduse alused",
+    "start": "10:00",
+    "end": "11:30"
+  },
+  {
+    "Kommentaar": "1. õppenädalal e-õpe Moodles",
+    "keel": "Eesti keel",
+    "tyyp": "harjutus",
+    "oppejoud": "Kristjan Liivamägi(vanemlektor)",
+    "ruum": "SOC-311",
+    "oppenadalad": "7",
+    "ryhmad": "HAAB51,IABB52",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/TER0440",
+    "tpg": "HAAB51",
+    "date": "15.10.2025",
+    "ainekood": "TER0440",
+    "aine": "Rahanduse alused",
+    "start": "12:00",
+    "end": "13:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Alexandros Pazaitis(teadur)",
+    "ruum": "SOC-309",
+    "oppenadalad": "7",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HHM1150",
+    "tpg": "HAAB51",
+    "date": "15.10.2025",
+    "ainekood": "HHM1150",
+    "aine": "Tänapäeva ühiskonna väljakutsed",
+    "start": "14:00",
+    "end": "17:00"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Marika Proover(nooremteadur)",
+    "ruum": "SOC-316",
+    "oppenadalad": "7",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/MNF5520",
+    "tpg": "HAAB51",
+    "date": "16.10.2025",
+    "ainekood": "MNF5520",
+    "aine": "Poliitikafilosoofia",
+    "start": "13:30",
+    "end": "16:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Mikk Lõhmus(lektor)",
+    "ruum": "SOC-416",
+    "oppenadalad": "7",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HHL0026",
+    "tpg": "HAAB51",
+    "date": "17.10.2025",
+    "ainekood": "HHL0026",
+    "aine": "Riigiteaduste valikkursus",
+    "start": "09:30",
+    "end": "11:45"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Alexandros Pazaitis(teadur)",
+    "ruum": "SOC-309",
+    "oppenadalad": "7",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HHM1150",
+    "tpg": "HAAB51",
+    "date": "17.10.2025",
+    "ainekood": "HHM1150",
+    "aine": "Tänapäeva ühiskonna väljakutsed",
+    "start": "13:30",
+    "end": "16:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Alexandros Pazaitis(teadur)",
+    "ruum": "SOC-314|",
+    "oppenadalad": "8",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HHM1150",
+    "tpg": "HAAB51",
+    "date": "20.10.2025",
+    "ainekood": "HHM1150",
+    "aine": "Tänapäeva ühiskonna väljakutsed",
+    "start": "13:30",
+    "end": "16:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Merilin Truuväärt(külalisõppejõud)",
+    "ruum": "SOC-310|",
+    "oppenadalad": "8",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HHM1151",
+    "tpg": "HAAB51",
+    "date": "21.10.2025",
+    "ainekood": "HHM1151",
+    "aine": "Avaliku sektori disainilabor",
+    "start": "09:30",
+    "end": "12:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Alexandros Pazaitis(teadur)",
+    "ruum": "SOC-310|",
+    "oppenadalad": "8",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HHM1150",
+    "tpg": "HAAB51",
+    "date": "21.10.2025",
+    "ainekood": "HHM1150",
+    "aine": "Tänapäeva ühiskonna väljakutsed",
+    "start": "13:30",
+    "end": "16:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng",
+    "oppejoud": "Kalle Ahi(lektor)",
+    "ruum": "SOC-209",
+    "oppenadalad": "8",
+    "ryhmad": "HAAB51,IABB51,IABB52,IABB53,TAAB31,TAAB32,TABB31,TABB32,TABB33,TABB34,TABB35,TABB36",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/TER0440",
+    "tpg": "HAAB51",
+    "date": "22.10.2025",
+    "ainekood": "TER0440",
+    "aine": "Rahanduse alused",
+    "start": "10:00",
+    "end": "11:30"
+  },
+  {
+    "Kommentaar": "1. õppenädalal e-õpe Moodles",
+    "keel": "Eesti keel",
+    "tyyp": "harjutus",
+    "oppejoud": "Kristjan Liivamägi(vanemlektor)",
+    "ruum": "SOC-311",
+    "oppenadalad": "8",
+    "ryhmad": "HAAB51,IABB52",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/TER0440",
+    "tpg": "HAAB51",
+    "date": "22.10.2025",
+    "ainekood": "TER0440",
+    "aine": "Rahanduse alused",
+    "start": "12:00",
+    "end": "13:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Alexandros Pazaitis(teadur)",
+    "ruum": "SOC-309",
+    "oppenadalad": "8",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HHM1150",
+    "tpg": "HAAB51",
+    "date": "22.10.2025",
+    "ainekood": "HHM1150",
+    "aine": "Tänapäeva ühiskonna väljakutsed",
+    "start": "14:00",
+    "end": "17:00"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Alexandros Pazaitis(teadur)",
+    "ruum": "SOC-309",
+    "oppenadalad": "8",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HHM1150",
+    "tpg": "HAAB51",
+    "date": "23.10.2025",
+    "ainekood": "HHM1150",
+    "aine": "Tänapäeva ühiskonna väljakutsed",
+    "start": "09:30",
+    "end": "12:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Andres Koppel(lektor)",
+    "oppenadalad": "3",
+    "ryhmad": "EDJR35,EDJR55_V,EDJR75",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/RAA0470",
+    "tpg": "EDJR55_V",
+    "date": "21.09.2025",
+    "ainekood": "RAA0470",
+    "aine": "Elektrijaamad",
+    "start": "09:00",
+    "end": "12:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+praktikum+harjutus",
+    "oppejoud": "Larissa Joonas(lektor)",
+    "ruum": "VK1-25",
+    "oppenadalad": "3",
+    "ryhmad": "EDJR35,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/EVR0290",
+    "tpg": "EDJR55_V",
+    "date": "21.09.2025",
+    "ainekood": "EVR0290",
+    "aine": "Andmeside",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Viktor Rjabtšikov(lektor)",
+    "oppenadalad": "5",
+    "ryhmad": "EDJR54_V,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/EVR0230",
+    "tpg": "EDJR55_V",
+    "date": "04.10.2025",
+    "ainekood": "EVR0230",
+    "aine": "MATLAB ja numbrilised meetodid",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+praktikum+harjutus",
+    "oppejoud": "Larissa Joonas(lektor)",
+    "ruum": "VK1-25",
+    "oppenadalad": "5",
+    "ryhmad": "EDJR35,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/EVR0290",
+    "tpg": "EDJR55_V",
+    "date": "05.10.2025",
+    "ainekood": "EVR0290",
+    "aine": "Andmeside",
+    "start": "09:00",
+    "end": "12:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Andres Koppel(lektor)",
+    "oppenadalad": "5",
+    "ryhmad": "EDJR35,EDJR55_V,EDJR75",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/RAA0470",
+    "tpg": "EDJR55_V",
+    "date": "05.10.2025",
+    "ainekood": "RAA0470",
+    "aine": "Elektrijaamad",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Andres Koppel(lektor)",
+    "oppenadalad": "6",
+    "ryhmad": "EDJR35,EDJR55_V,EDJR75",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/RAA0470",
+    "tpg": "EDJR55_V",
+    "date": "11.10.2025",
+    "ainekood": "RAA0470",
+    "aine": "Elektrijaamad",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Viktor Rjabtšikov(lektor)",
+    "oppenadalad": "7",
+    "ryhmad": "EDJR54_V,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/EVR0230",
+    "tpg": "EDJR55_V",
+    "date": "18.10.2025",
+    "ainekood": "EVR0230",
+    "aine": "MATLAB ja numbrilised meetodid",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+praktikum+harjutus",
+    "oppejoud": "Tatjana Baraškova(vanemlektor)",
+    "oppenadalad": "7",
+    "ryhmad": "EDJR54_V,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/RAE0900",
+    "tpg": "EDJR55_V",
+    "date": "19.10.2025",
+    "ainekood": "RAE0900",
+    "aine": "Hüdro- ja pneumoajam",
+    "start": "09:00",
+    "end": "12:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+praktikum+harjutus",
+    "oppejoud": "Larissa Joonas(lektor)",
+    "ruum": "VK1-25",
+    "oppenadalad": "7",
+    "ryhmad": "EDJR35,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/EVR0290",
+    "tpg": "EDJR55_V",
+    "date": "19.10.2025",
+    "ainekood": "EVR0290",
+    "aine": "Andmeside",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Viktor Rjabtšikov(lektor)",
+    "oppenadalad": "9",
+    "ryhmad": "EDJR54_V,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/EVR0230",
+    "tpg": "EDJR55_V",
+    "date": "01.11.2025",
+    "ainekood": "EVR0230",
+    "aine": "MATLAB ja numbrilised meetodid",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+praktikum+harjutus",
+    "oppejoud": "Tatjana Baraškova(vanemlektor)",
+    "oppenadalad": "9",
+    "ryhmad": "EDJR54_V,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/RAE0900",
+    "tpg": "EDJR55_V",
+    "date": "02.11.2025",
+    "ainekood": "RAE0900",
+    "aine": "Hüdro- ja pneumoajam",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Andres Koppel(lektor)",
+    "oppenadalad": "10",
+    "ryhmad": "EDJR35,EDJR55_V,EDJR75",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/RAA0470",
+    "tpg": "EDJR55_V",
+    "date": "08.11.2025",
+    "ainekood": "RAA0470",
+    "aine": "Elektrijaamad",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Viktor Rjabtšikov(lektor)",
+    "oppenadalad": "11",
+    "ryhmad": "EDJR54_V,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/EVR0230",
+    "tpg": "EDJR55_V",
+    "date": "15.11.2025",
+    "ainekood": "EVR0230",
+    "aine": "MATLAB ja numbrilised meetodid",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+praktikum+harjutus",
+    "oppejoud": "Tatjana Baraškova(vanemlektor)",
+    "oppenadalad": "11",
+    "ryhmad": "EDJR54_V,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/RAE0900",
+    "tpg": "EDJR55_V",
+    "date": "16.11.2025",
+    "ainekood": "RAE0900",
+    "aine": "Hüdro- ja pneumoajam",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+praktikum+harjutus",
+    "oppejoud": "Larissa Joonas(lektor)",
+    "ruum": "VK1-25",
+    "oppenadalad": "13",
+    "ryhmad": "EDJR35,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/EVR0290",
+    "tpg": "EDJR55_V",
+    "date": "29.11.2025",
+    "ainekood": "EVR0290",
+    "aine": "Andmeside",
+    "start": "09:00",
+    "end": "12:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Viktor Rjabtšikov(lektor)",
+    "oppenadalad": "13",
+    "ryhmad": "EDJR54_V,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/EVR0230",
+    "tpg": "EDJR55_V",
+    "date": "29.11.2025",
+    "ainekood": "EVR0230",
+    "aine": "MATLAB ja numbrilised meetodid",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+praktikum+harjutus",
+    "oppejoud": "Tatjana Baraškova(vanemlektor)",
+    "oppenadalad": "13",
+    "ryhmad": "EDJR54_V,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/RAE0900",
+    "tpg": "EDJR55_V",
+    "date": "30.11.2025",
+    "ainekood": "RAE0900",
+    "aine": "Hüdro- ja pneumoajam",
+    "start": "13:00",
+    "end": "16:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+praktikum+harjutus",
+    "oppejoud": "Larissa Joonas(lektor)",
+    "ruum": "VK1-25",
+    "oppenadalad": "15",
+    "ryhmad": "EDJR35,EDJR55_V",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/EVR0290",
+    "tpg": "EDJR55_V",
+    "date": "13.12.2025",
+    "ainekood": "EVR0290",
+    "aine": "Andmeside",
+    "start": "09:00",
+    "end": "12:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Marika Proover(nooremteadur)",
+    "ruum": "SOC-316",
+    "oppenadalad": "8",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/MNF5520",
+    "tpg": "HAAB51",
+    "date": "23.10.2025",
+    "ainekood": "MNF5520",
+    "aine": "Poliitikafilosoofia",
+    "start": "13:30",
+    "end": "16:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Janika Aben(külalisõppejõud)",
+    "ruum": "SOC-417",
+    "oppenadalad": "8",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HOE6020",
+    "tpg": "HAAB51",
+    "date": "23.10.2025",
+    "ainekood": "HOE6020",
+    "aine": "Tööõigus",
+    "start": "14:00",
+    "end": "17:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Mikk Lõhmus(lektor)",
+    "ruum": "SOC-416",
+    "oppenadalad": "8",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HHL0026",
+    "tpg": "HAAB51",
+    "date": "24.10.2025",
+    "ainekood": "HHL0026",
+    "aine": "Riigiteaduste valikkursus",
+    "start": "09:30",
+    "end": "11:45"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Alexandros Pazaitis(teadur)",
+    "ruum": "SOC-309",
+    "oppenadalad": "8",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HHM1150",
+    "tpg": "HAAB51",
+    "date": "24.10.2025",
+    "ainekood": "HHM1150",
+    "aine": "Tänapäeva ühiskonna väljakutsed",
+    "start": "13:30",
+    "end": "16:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Tõnu Pihelgas(tunnitasuline)",
+    "ruum": "SOC-211a",
+    "oppenadalad": "9",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HOL6010",
+    "tpg": "HAAB51",
+    "date": "27.10.2025",
+    "ainekood": "HOL6010",
+    "aine": "Euroopa Liidu õigus",
+    "start": "16:00",
+    "end": "19:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Merilin Truuväärt(külalisõppejõud)",
+    "ruum": "SOC-309",
+    "oppenadalad": "9",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HHM1151",
+    "tpg": "HAAB51",
+    "date": "28.10.2025",
+    "ainekood": "HHM1151",
+    "aine": "Avaliku sektori disainilabor",
+    "start": "09:30",
+    "end": "12:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng",
+    "oppejoud": "Kalle Ahi(lektor)",
+    "ruum": "SOC-209",
+    "oppenadalad": "9",
+    "ryhmad": "HAAB51,IABB51,IABB52,IABB53,TAAB31,TAAB32,TABB31,TABB32,TABB33,TABB34,TABB35,TABB36",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/TER0440",
+    "tpg": "HAAB51",
+    "date": "29.10.2025",
+    "ainekood": "TER0440",
+    "aine": "Rahanduse alused",
+    "start": "10:00",
+    "end": "11:30"
+  },
+  {
+    "Kommentaar": "1. õppenädalal e-õpe Moodles",
+    "keel": "Eesti keel",
+    "tyyp": "harjutus",
+    "oppejoud": "Kristjan Liivamägi(vanemlektor)",
+    "ruum": "SOC-211a|",
+    "oppenadalad": "9",
+    "ryhmad": "HAAB51,IABB52",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/TER0440",
+    "tpg": "HAAB51",
+    "date": "29.10.2025",
+    "ainekood": "TER0440",
+    "aine": "Rahanduse alused",
+    "start": "12:00",
+    "end": "13:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Marika Proover(nooremteadur)",
+    "ruum": "SOC-316",
+    "oppenadalad": "9",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/MNF5520",
+    "tpg": "HAAB51",
+    "date": "30.10.2025",
+    "ainekood": "MNF5520",
+    "aine": "Poliitikafilosoofia",
+    "start": "13:30",
+    "end": "16:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Merilin Truuväärt(külalisõppejõud)",
+    "ruum": "SOC-309",
+    "oppenadalad": "10",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HHM1151",
+    "tpg": "HAAB51",
+    "date": "04.11.2025",
+    "ainekood": "HHM1151",
+    "aine": "Avaliku sektori disainilabor",
+    "start": "09:30",
+    "end": "12:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng",
+    "oppejoud": "Kalle Ahi(lektor)",
+    "ruum": "SOC-209",
+    "oppenadalad": "10",
+    "ryhmad": "HAAB51,IABB51,IABB52,IABB53,TAAB31,TAAB32,TABB31,TABB32,TABB33,TABB34,TABB35,TABB36",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/TER0440",
+    "tpg": "HAAB51",
+    "date": "05.11.2025",
+    "ainekood": "TER0440",
+    "aine": "Rahanduse alused",
+    "start": "10:00",
+    "end": "11:30"
+  },
+  {
+    "Kommentaar": "1. õppenädalal e-õpe Moodles",
+    "keel": "Eesti keel",
+    "tyyp": "harjutus",
+    "oppejoud": "Kristjan Liivamägi(vanemlektor)",
+    "ruum": "SOC-211a|",
+    "oppenadalad": "10",
+    "ryhmad": "HAAB51,IABB52",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/TER0440",
+    "tpg": "HAAB51",
+    "date": "05.11.2025",
+    "ainekood": "TER0440",
+    "aine": "Rahanduse alused",
+    "start": "12:00",
+    "end": "13:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Marika Proover(nooremteadur)",
+    "ruum": "SOC-316",
+    "oppenadalad": "10",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/MNF5520",
+    "tpg": "HAAB51",
+    "date": "06.11.2025",
+    "ainekood": "MNF5520",
+    "aine": "Poliitikafilosoofia",
+    "start": "13:30",
+    "end": "16:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Janika Aben(külalisõppejõud)",
+    "ruum": "SOC-417",
+    "oppenadalad": "10",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HOE6020",
+    "tpg": "HAAB51",
+    "date": "06.11.2025",
+    "ainekood": "HOE6020",
+    "aine": "Tööõigus",
+    "start": "14:00",
+    "end": "17:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Tõnu Pihelgas(tunnitasuline)",
+    "ruum": "SOC-211a",
+    "oppenadalad": "11",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HOL6010",
+    "tpg": "HAAB51",
+    "date": "10.11.2025",
+    "ainekood": "HOL6010",
+    "aine": "Euroopa Liidu õigus",
+    "start": "16:00",
+    "end": "19:15"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng+harjutus",
+    "oppejoud": "Merilin Truuväärt(külalisõppejõud)",
+    "ruum": "SOC-309",
+    "oppenadalad": "11",
+    "ryhmad": "HAAB51",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/HHM1151",
+    "tpg": "HAAB51",
+    "date": "11.11.2025",
+    "ainekood": "HHM1151",
+    "aine": "Avaliku sektori disainilabor",
+    "start": "09:30",
+    "end": "12:30"
+  },
+  {
+    "keel": "Eesti keel",
+    "tyyp": "loeng",
+    "oppejoud": "Kalle Ahi(lektor)",
+    "ruum": "SOC-209",
+    "oppenadalad": "11",
+    "ryhmad": "HAAB51,IABB51,IABB52,IABB53,TAAB31,TAAB32,TABB31,TABB32,TABB33,TABB34,TABB35,TABB36",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/TER0440",
+    "tpg": "HAAB51",
+    "date": "12.11.2025",
+    "ainekood": "TER0440",
+    "aine": "Rahanduse alused",
+    "start": "10:00",
+    "end": "11:30"
+  },
+  {
+    "Kommentaar": "1. õppenädalal e-õpe Moodles",
+    "keel": "Eesti keel",
+    "tyyp": "harjutus",
+    "oppejoud": "Kristjan Liivamägi(vanemlektor)",
+    "ruum": "SOC-211a|",
+    "oppenadalad": "11",
+    "ryhmad": "HAAB51,IABB52",
+    "ainekavaurl": "https://ois2.taltech.ee/uusois/aine/TER0440",
+    "tpg": "HAAB51",
+    "date": "12.11.2025",
+    "ainekood": "TER0440",
+    "aine": "Rahanduse alused",
+    "start": "12:00",
+    "end": "13:30"
+  }
+];
+                console.log("Courses loaded:", allCourses.length);
 
-                allCourses.forEach(course => {
-                    if (course.interests && Array.isArray(course.interests)) {
-                        course.interests = course.interests.map(interest => interest === "History" ? "Law" : interest);
-                        course.interests = [...new Set(course.interests)]; 
-                    }
-                });
+                // No need to process interests for schedule data
 
                 activeFilters.teachingLanguage = ""; 
                 activeFilters.searchTerm = "";
@@ -999,8 +2353,12 @@
                 compileUniqueSearchableTerms();
                 filteredCourses = [...allCourses]; 
                 
+                // Set language first, which will trigger UI updates and filtering
                 setLanguage('et'); 
-                setupEventListeners(); 
+                setupEventListeners(); // Setup listeners after initial data load and language set
+                setupCalendarEventListeners(); // Setup calendar-specific listeners
+                
+                // Removed auto-switch - users can manually toggle views
 
             } catch (error) {
                 console.error("Could not load or initialize courses:", error);
@@ -1009,9 +2367,9 @@
                 } else {
                     alert(`Viga kursuste laadimisel (${error.message}). Palun kontrolli, et fail "courses.json" on olemas ja proovi hiljem uuesti.`);
                 }
-                if (searchResultCountDOM) searchResultCountDOM.textContent = ""; // Clear result count on error
             } finally {
                  if (loadingIndicatorDOM) loadingIndicatorDOM.classList.add('hidden');
+                 console.log("App initialization finished.");
             }
         }
 
