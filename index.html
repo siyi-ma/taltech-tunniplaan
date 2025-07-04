@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TalTech kursused sügis 2025</title>
+    <title>TalTech kursused kevad 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -109,7 +109,7 @@
                 <button id="filterToggleButton" class="mr-4 p-2 text-white hover:bg-tt-dark-blue-hover rounded" aria-label="Ava filtrid">
                     <i class="fas fa-bars fa-lg"></i>
                 </button>
-                <h1 id="pageTitle" class="text-2xl proxima-nova-bold uppercase">TalTech kursused sügis 2025</h1>
+                <h1 id="pageTitle" class="text-2xl proxima-nova-bold uppercase">TalTech kursused kevad 2025</h1>
             </div>
             <button id="languageToggle" class="p-2 bg-tt-magenta hover:bg-opacity-80 rounded" aria-label="Switch language">
                 <i class="fas fa-globe"></i> <span id="langIndicator">EN</span>
@@ -269,7 +269,7 @@
         const MAX_SUGGESTIONS = 7;
 
         const uiTexts = {
-            pageTitle: { et: 'TalTech kursused sügis 2025', en: 'TalTech Courses Fall 2025' },
+            pageTitle: { et: 'TalTech kursused kevad 2025', en: 'TalTech Courses Spring 2025' },
             searchInputLabel: { et: 'Otsisõna', en: 'Search term' },
             searchPlaceholder: { et: 'Sisesta otsisõna...', en: 'Insert search word...' },
             searchFieldSelectorLabel: { et: 'Otsi väljal', en: 'Search in field' },
@@ -994,372 +994,13 @@
             console.log("Initializing app...");
             if (loadingIndicatorDOM) loadingIndicatorDOM.classList.remove('hidden');
             try {
-                // Skip file loading and use embedded data directly
-                console.log('Using embedded course data');
-                // Large set of embedded course data
-                allCourses = [
-  {
-    "õppeaine register": "A - põhiregister",
-    "õppeaine kood": "AEK0210",
-    "õppeaine nimetus eesti k": "Sissejuhatus elektroenergeetikasse",
-    "õppeaine nimetus inglise k": "Fundamentals of Electrical Power Engineering",
-    "õppeaine maht EAP": "6.00",
-    "deklareeritav": "jah",
-    "õppeaine täies mahus läbitav e-õppes": "ei",
-    "kontrollivorm": "eksam",
-    "õpetamise semester": "sügis",
-    "Õppekavad, millesse aine kuulub": "kavaversiooni koodaine kohustuslik\nEAAB16/25jah",
-    "Ainet õpetavad struktuuriüksused": "EE - elektroenergeetika ja mehhatroonika instituut",
-    "Ainekaardi link": "http://ois2.taltech.ee/uusois/aine/AEK0210",
-    "Tunniplaani link": "https://tunniplaan.taltech.ee/#/public/subject/113495",
-    "õppeaine eesmärgid eesti k": "- Anda ülevaade õpingukorraldusest TTÜs ning TTÜ üliõpilase õigustest ja kohustustest.\n- Anda terviklik ja üldine ülevaade elektroenergeetikast, alates energiaressurssidest ning lõpetades elektrienergia kasutamisega.\n- Luua teoreetiline baas elektroenergeetika eriala ainetele.\n- Anda teadmisi energiaseadmete toimest keskkonnale ja esmasest ohutustehnikast.",
-    "õppeaine eesmärgid inglise k": "- To give the complete and general review of electric power industry, from power resources to the use of the electric power.\n- To create theoretical base for specialized subjects.\n- To provide knowledge of the environmental problems caused by energy production and consumption.",
-    "õppeaine õpiväljundid eesti k.": "Üliõpilane:\n- mõistab TTÜs õppimisega seoses kehtivaid reegleid ning teab oma õigusi ja kohustusi, sh käitumisjuhiseid (eetika, netikett) ning andmete ja õpitulemuste kasutamise reegleid (sh andmete konfidentsiaalsus ja turvalisus);\n- omab selget ettekujutust elektroenergeetika sisust ja suundumustest;\n- kirjeldab elektroenergeetika põhimõisteid ja nimetab elektroenergeetika aktuaalseid probleeme;\n- omab algteadmisi energia muundamis-, edastus- ja salvestusviisidest;\n- oskab leida energeetikaressursside alusinfot, mõistab energeetikas kasutatavaid põhiühikuid ja erinevate suuruste vahelisi seoseid;\n- kirjeldab taastuvate energiaallikate kasutamise võimalusi;\n- omab selget ettekujutust energiaseadmete toimest keskkonnale ja selle toime vähendamisviisidest;\n- omab arusaamist esmasest ohutustehnikast.",
-    "õppeaine õpiväljundid ingl k.": "The student:\n- shall acquire clear comprehension of the contents and trends of modern electrical power industry;\n- Describes the basic concepts of electric power industry and names actual problems of electric power industry;\n- understands initial knowledge of the conversion, transmission and accumulation of energy;\n- describes the usage of renewable energy sources;\n- understands clear comprehension of the impacts caused by energy production and consumption on the environment.",
-    "õppeaine sisu lühikirjeldus eesti k": "Õppimine TTÜs ja õppimisega seotud reeglistik: õppetöö korraldus, üliõpilase õigused ja kohustused (sh käitumis- ja eetikareeglid, netikett ja küberhügieen), õpiinfosüsteemide ja e-õppe keskkondade kasutamine, andmekaitse tagamise põhimõtted ja konfidentsiaalsus.\nEesti elektroenergeetika ajalugu, praegused probleemid, tulevikukavad. Maailma energiaressursid. Maa energiabilanss, maailma maade energia- ja elektritarbimine. Primaarenergiavarud (üldmõisted, päikeseenergia, kütused, taastuvad biokütused, tuumaenergia, hüdroenergia, tuuleenergia, geotermaalenergia). Elektriinseneri kutse, töövaldkond ja tegevuse alused.",
-    "õppeaine sisu lühikirjeldus ingl k": "History of the Estonian electric power industry, today's problems, programs on the future. World energy sources. Energy balance of the earth, energy and electricity consumption of various countrys. Primary sources of energy ( solar energy, fossil fuels, renewable biofuels, nuclear energy, hydro energy, wind energy and geothermal energy). Engineering profession.",
-    "hindamisviis eesti k": "Eksamil kuni 10 küsimust. Eksam kirjalik kestusega 2 tundi.",
-    "hindamisviis ingl k": "Examination consists of up to 10 theoretical questions. The examination is written and lasts 2 hours.",
-    "iseseisev töö eesti k": "Iseseisev töö seisneb teoreetiliste materjalide läbitöötamises ja ettevalmistuses eksamiks.",
-    "iseseisev töö ingl k": "Independent work consists of study of theoretical materials and preparation for examination.",
-    "õppekirjandus": "1. Konspekt \"Elektroenergeetika alused\" internetis.\n2. Risthein, E. Sissejuhatus energiatehnikasse. Elektriajam, Tallinn, 2007, 260 lk.\n3. B.M. Weedy, Electric power systems. John Wiley & sons, Chichester, 1989. 538 p.",
-    "õppevormid ja mahud": "päevaõpe: nädalatunnid4.0sessioonõppe töömahud (semestris):\nloenguid2.0loenguid0.0\npraktikume2.0praktikume0.0\nharjutusi0.0harjutusi0.0",
-    "KEEL_et": "1",
-    "KEEL_en": "0"
-  },
-  {
-    "õppeaine register": "A - põhiregister",
-    "õppeaine kood": "ICD0001",
-    "õppeaine nimetus eesti k": "Sissejuhatus digitehnoloogiatesse",
-    "õppeaine nimetus inglise k": "Introduction to Digital Technologies",
-    "õppeaine maht EAP": "3.00",
-    "deklareeritav": "jah",
-    "õppeaine täies mahus läbitav e-õppes": "ei",
-    "kontrollivorm": "eksam",
-    "õpetamise semester": "sügis",
-    "Õppekavad, millesse aine kuulub": "kavaversiooni koodaine kohustuslik\nIABB14/25jah",
-    "Ainet õpetavad struktuuriüksused": "ITI - IT-kolledž",
-    "Ainekaardi link": "http://ois2.taltech.ee/uusois/aine/ICD0001",
-    "Tunniplaani link": "https://tunniplaan.taltech.ee/#/public/subject/112285",
-    "õppeaine eesmärgid eesti k": "- Anda ülevaade digitehnoloogiate põhimõistetest ja arengusuundadest.\n- Tutvustada erinevaid andmestruktuure ja algoritme.\n- Anda baasteadmised programmeerimise põhimõtetest ja praktikast.",
-    "õppeaine eesmärgid inglise k": "- To provide an overview of basic concepts and trends in digital technologies.\n- To introduce various data structures and algorithms.\n- To give basic knowledge about programming principles and practice.",
-    "õppeaine õpiväljundid eesti k.": "Üliõpilane:\n- tunneb digitehnoloogiate põhimõisteid ja -printsiipe;\n- oskab kirjeldada erinevaid andmestruktuure ja algoritme;\n- mõistab programmeerimise põhimõtteid ja oskab lahendada lihtsamaid programmeerimisülesandeid;\n- oskab kasutada programmeerimiskeskkonda ja testida oma koodi.",
-    "õppeaine õpiväljundid ingl k.": "The student:\n- knows the basic concepts and principles of digital technologies;\n- can describe different data structures and algorithms;\n- understands programming principles and can solve basic programming tasks;\n- can use programming environment and test their code.",
-    "õppeaine sisu lühikirjeldus eesti k": "Aine annab ülevaate digitehnoloogiate põhimõistetest ja -printsiipidest. Tutvustatakse erinevaid andmestruktuure ja algoritme ning nende kasutamist. Õpitakse programmeerimise aluseid ja lahendatakse lihtsamaid programmeerimisülesandeid. Tutvutakse programmeerimiskeskkonnaga ja koodi testimisega.",
-    "õppeaine sisu lühikirjeldus ingl k": "The course provides an overview of basic concepts and principles of digital technologies. Various data structures and algorithms and their usage are introduced. Programming basics are learned and simple programming tasks are solved. Programming environment and code testing are introduced.",
-    "hindamisviis eesti k": "Eksam koosneb teooriaosast (50%) ja praktilisest osast (50%).",
-    "hindamisviis ingl k": "The exam consists of a theoretical part (50%) and a practical part (50%).",
-    "iseseisev töö eesti k": "Iseseisev töö hõlmab õppematerjalide läbitöötamist, praktiliste ülesannete lahendamist ja eksamiks valmistumist.",
-    "iseseisev töö ingl k": "Independent work includes studying materials, solving practical tasks and preparation for the exam.",
-    "õppekirjandus": "1. Brookshear, J. G. Computer Science: An Overview. Pearson Education, 2016.\n2. Python Programming: An Introduction to Computer Science. Franklin, Beedle & Associates, 2018.",
-    "õppevormid ja mahud": "päevaõpe: nädalatunnid3.0sessioonõppe töömahud (semestris):\nloenguid1.5loenguid0.0\npraktikume1.5praktikume0.0\nharjutusi0.0harjutusi0.0",
-    "KEEL_et": "1",
-    "KEEL_en": "1"
-  },
-  {
-    "õppeaine register": "A - põhiregister",
-    "õppeaine kood": "TMJ0220",
-    "õppeaine nimetus eesti k": "Juhtimise alused",
-    "õppeaine nimetus inglise k": "Fundamentals of Management",
-    "õppeaine maht EAP": "6.00",
-    "deklareeritav": "jah",
-    "õppeaine täies mahus läbitav e-õppes": "jah",
-    "kontrollivorm": "eksam",
-    "õpetamise semester": "sügis",
-    "Õppekavad, millesse aine kuulub": "kavaversiooni koodaine kohustuslik\nTAMB16/25jah",
-    "Ainet õpetavad struktuuriüksused": "ME - majandusteaduskond",
-    "Ainekaardi link": "http://ois2.taltech.ee/uusois/aine/TMJ0220",
-    "Tunniplaani link": "https://tunniplaan.taltech.ee/#/public/subject/111395",
-    "õppeaine eesmärgid eesti k": "- Anda ülevaade juhtimise põhimõistetest ja -printsiipidest.\n- Tutvustada organisatsiooni struktuuri ja kultuuri.\n- Arendada meeskonnatöö oskusi ja juhtimiskompetentse.",
-    "õppeaine eesmärgid inglise k": "- To provide an overview of basic concepts and principles of management.\n- To introduce organizational structure and culture.\n- To develop teamwork skills and management competencies.",
-    "õppeaine õpiväljundid eesti k.": "Üliõpilane:\n- tunneb juhtimise põhimõisteid ja -printsiipe;\n- oskab analüüsida organisatsiooni struktuuri ja kultuuri;\n- suudab töötada meeskonnas ja arendada juhtimiskompetentse;\n- oskab rakendada juhtimisteooriaid praktikas.",
-    "õppeaine õpiväljundid ingl k.": "The student:\n- knows the basic concepts and principles of management;\n- can analyze organizational structure and culture;\n- can work in a team and develop management competencies;\n- can apply management theories in practice.",
-    "õppeaine sisu lühikirjeldus eesti k": "Aine annab ülevaate juhtimise põhimõistetest ja -printsiipidest. Tutvustatakse organisatsiooni struktuuri ja kultuuri ning nende mõju ettevõtte toimimisele. Arendatakse meeskonnatöö oskusi ja juhtimiskompetentse. Käsitletakse juhtimisteooriaid ja nende rakendamist praktikas.",
-    "õppeaine sisu lühikirjeldus ingl k": "The course provides an overview of basic concepts and principles of management. Organizational structure and culture and their impact on company performance are introduced. Teamwork skills and management competencies are developed. Management theories and their application in practice are covered.",
-    "hindamisviis eesti k": "Eksam koosneb teooriaosast (50%) ja juhtumianalüüsist (50%).",
-    "hindamisviis ingl k": "The exam consists of a theoretical part (50%) and a case study (50%).",
-    "iseseisev töö eesti k": "Iseseisev töö hõlmab õppematerjalide läbitöötamist, juhtumianalüüsi koostamist ja eksamiks valmistumist.",
-    "iseseisev töö ingl k": "Independent work includes studying materials, preparing a case study and preparation for the exam.",
-    "õppekirjandus": "1. Robbins, S. P., Coulter, M. Management. Pearson Education, 2018.\n2. Drucker, P. F. The Practice of Management. Harper Business, 2006.",
-    "õppevormid ja mahud": "päevaõpe: nädalatunnid4.0sessioonõppe töömahud (semestris):\nloenguid2.0loenguid0.0\npraktikume2.0praktikume0.0\nharjutusi0.0harjutusi0.0",
-    "KEEL_et": "1",
-    "KEEL_en": "1"
-  },
-  {
-    "õppeaine register": "A - põhiregister",
-    "õppeaine kood": "MSE0100",
-    "õppeaine nimetus eesti k": "Materjaliteaduse alused",
-    "õppeaine nimetus inglise k": "Fundamentals of Materials Science",
-    "õppeaine maht EAP": "3.00",
-    "deklareeritav": "jah",
-    "õppeaine täies mahus läbitav e-õppes": "ei",
-    "kontrollivorm": "arvestus",
-    "õpetamise semester": "sügis",
-    "Õppekavad, millesse aine kuulub": "kavaversiooni koodaine kohustuslik\nMAAB16/25jah",
-    "Ainet õpetavad struktuuriüksused": "MI - mehaanika ja tööstustehnika instituut",
-    "Ainekaardi link": "http://ois2.taltech.ee/uusois/aine/MSE0100",
-    "Tunniplaani link": "https://tunniplaan.taltech.ee/#/public/subject/112185",
-    "õppeaine eesmärgid eesti k": "- Anda ülevaade materjaliteaduse põhimõistetest ja -printsiipidest.\n- Tutvustada erinevaid materjale ja nende omadusi.\n- Arendada materjalide valiku ja katsetamise oskusi.",
-    "õppeaine eesmärgid inglise k": "- To provide an overview of basic concepts and principles of materials science.\n- To introduce different materials and their properties.\n- To develop skills for materials selection and testing.",
-    "õppeaine õpiväljundid eesti k.": "Üliõpilane:\n- tunneb materjaliteaduse põhimõisteid ja -printsiipe;\n- oskab kirjeldada erinevate materjalide struktuuri ja omadusi;\n- suudab valida sobivaid materjale erinevate rakenduste jaoks;\n- oskab teostada lihtsamaid materjalikatsetusi.",
-    "õppeaine õpiväljundid ingl k.": "The student:\n- knows the basic concepts and principles of materials science;\n- can describe the structure and properties of different materials;\n- can select appropriate materials for different applications;\n- can perform simple material tests.",
-    "õppeaine sisu lühikirjeldus eesti k": "Aine annab ülevaate materjaliteaduse põhimõistetest ja -printsiipidest. Tutvustatakse erinevaid materjale (metallid, polümeerid, keraamika, komposiidid) ja nende omadusi. Käsitletakse materjalide struktuuri ja omaduste vahelisi seoseid. Õpitakse materjale valima erinevate rakenduste jaoks ja teostama lihtsamaid materjalikatsetusi.",
-    "õppeaine sisu lühikirjeldus ingl k": "The course provides an overview of basic concepts and principles of materials science. Different materials (metals, polymers, ceramics, composites) and their properties are introduced. The relationships between material structure and properties are covered. Students learn to select materials for different applications and perform simple material tests.",
-    "hindamisviis eesti k": "Arvestuse saamiseks tuleb sooritada kaks kontrolltööd ja laboratoorsed tööd.",
-    "hindamisviis ingl k": "To pass the course, students must complete two tests and laboratory works.",
-    "iseseisev töö eesti k": "Iseseisev töö hõlmab õppematerjalide läbitöötamist, laboratoorsete tööde ettevalmistamist ja arvestuseks valmistumist.",
-    "iseseisev töö ingl k": "Independent work includes studying materials, preparing for laboratory works and preparation for the assessment.",
-    "õppekirjandus": "1. Callister, W. D., Rethwisch, D. G. Materials Science and Engineering: An Introduction. Wiley, 2018.\n2. Ashby, M. F. Materials Selection in Mechanical Design. Butterworth-Heinemann, 2016.",
-    "õppevormid ja mahud": "päevaõpe: nädalatunnid3.0sessioonõppe töömahud (semestris):\nloenguid1.5loenguid0.0\npraktikume1.5praktikume0.0\nharjutusi0.0harjutusi0.0",
-    "KEEL_et": "1",
-    "KEEL_en": "0"
-  },
-  {
-    "õppeaine register": "A - põhiregister",
-    "õppeaine kood": "IDU0510",
-    "õppeaine nimetus eesti k": "Tarkvaratehnika",
-    "õppeaine nimetus inglise k": "Software Engineering",
-    "õppeaine maht EAP": "6.00",
-    "deklareeritav": "jah",
-    "õppeaine täies mahus läbitav e-õppes": "jah",
-    "kontrollivorm": "eksam",
-    "õpetamise semester": "sügis",
-    "Õppekavad, millesse aine kuulub": "kavaversiooni koodaine kohustuslik\nIABB14/25jah",
-    "Ainet õpetavad struktuuriüksused": "ITI - infotehnoloogia teaduskond",
-    "Ainekaardi link": "http://ois2.taltech.ee/uusois/aine/IDU0510",
-    "Tunniplaani link": "https://tunniplaan.taltech.ee/#/public/subject/114285",
-    "õppeaine eesmärgid eesti k": "- Anda ülevaade tarkvaratehnika põhimõistetest ja -printsiipidest.\n- Tutvustada tarkvaraarenduse meetodeid ja protsesse.\n- Arendada tarkvaraprojektide planeerimise ja juhtimise oskusi.",
-    "õppeaine eesmärgid inglise k": "- To provide an overview of basic concepts and principles of software engineering.\n- To introduce software development methods and processes.\n- To develop skills for planning and managing software projects.",
-    "õppeaine õpiväljundid eesti k.": "Üliõpilane:\n- tunneb tarkvaratehnika põhimõisteid ja -printsiipe;\n- oskab kasutada erinevaid tarkvaraarenduse meetodeid ja protsesse;\n- suudab planeerida ja juhtida tarkvaraprojekte;\n- oskab koostada tarkvaranõudeid ja -spetsifikatsioone.",
-    "õppeaine õpiväljundid ingl k.": "The student:\n- knows the basic concepts and principles of software engineering;\n- can use different software development methods and processes;\n- can plan and manage software projects;\n- can prepare software requirements and specifications.",
-    "õppeaine sisu lühikirjeldus eesti k": "Aine annab ülevaate tarkvaratehnika põhimõistetest ja -printsiipidest. Tutvustatakse erinevaid tarkvaraarenduse meetodeid ja protsesse (traditsiooniline, agiilne). Käsitletakse tarkvaraprojektide planeerimist ja juhtimist. Õpitakse koostama tarkvaranõudeid ja -spetsifikatsioone.",
-    "õppeaine sisu lühikirjeldus ingl k": "The course provides an overview of basic concepts and principles of software engineering. Different software development methods and processes (traditional, agile) are introduced. Planning and management of software projects are covered. Students learn to prepare software requirements and specifications.",
-    "hindamisviis eesti k": "Eksam koosneb teooriaosast (50%) ja praktilisest projektist (50%).",
-    "hindamisviis ingl k": "The exam consists of a theoretical part (50%) and a practical project (50%).",
-    "iseseisev töö eesti k": "Iseseisev töö hõlmab õppematerjalide läbitöötamist, projekti koostamist ja eksamiks valmistumist.",
-    "iseseisev töö ingl k": "Independent work includes studying materials, preparing a project and preparation for the exam.",
-    "õppekirjandus": "1. Sommerville, I. Software Engineering. Pearson Education, 2016.\n2. Pressman, R. S. Software Engineering: A Practitioner's Approach. McGraw-Hill, 2014.",
-    "õppevormid ja mahud": "päevaõpe: nädalatunnid4.0sessioonõppe töömahud (semestris):\nloenguid2.0loenguid0.0\npraktikume2.0praktikume0.0\nharjutusi0.0harjutusi0.0",
-    "KEEL_et": "0",
-    "KEEL_en": "1"
-  },
-  {
-    "õppeaine register": "A - põhiregister",
-    "õppeaine kood": "TTO1050",
-    "õppeaine nimetus eesti k": "Keskkonnakaitse ja säästev areng",
-    "õppeaine nimetus inglise k": "Environmental Protection and Sustainable Development",
-    "õppeaine maht EAP": "3.00",
-    "deklareeritav": "jah",
-    "õppeaine täies mahus läbitav e-õppes": "jah",
-    "kontrollivorm": "arvestus",
-    "õpetamise semester": "sügis",
-    "Õppekavad, millesse aine kuulub": "kavaversiooni koodaine kohustuslik\nTKMB14/25jah",
-    "Ainet õpetavad struktuuriüksused": "TK - keemia ja biotehnoloogia instituut",
-    "Ainekaardi link": "http://ois2.taltech.ee/uusois/aine/TTO1050",
-    "Tunniplaani link": "https://tunniplaan.taltech.ee/#/public/subject/111985",
-    "õppeaine eesmärgid eesti k": "- Anda ülevaade keskkonnakaitse põhimõistetest ja -printsiipidest.\n- Tutvustada säästva arengu kontseptsiooni ja rakendusi.\n- Arendada keskkonnamõjude hindamise ja vähendamise oskusi.",
-    "õppeaine eesmärgid inglise k": "- To provide an overview of basic concepts and principles of environmental protection.\n- To introduce the concept and applications of sustainable development.\n- To develop skills for environmental impact assessment and reduction.",
-    "õppeaine õpiväljundid eesti k.": "Üliõpilane:\n- tunneb keskkonnakaitse põhimõisteid ja -printsiipe;\n- oskab selgitada säästva arengu kontseptsiooni ja rakendusi;\n- suudab hinnata ja vähendada keskkonnamõjusid;\n- oskab rakendada keskkonnakaitse meetodeid praktikas.",
-    "õppeaine õpiväljundid ingl k.": "The student:\n- knows the basic concepts and principles of environmental protection;\n- can explain the concept and applications of sustainable development;\n- can assess and reduce environmental impacts;\n- can apply environmental protection methods in practice.",
-    "õppeaine sisu lühikirjeldus eesti k": "Aine annab ülevaate keskkonnakaitse põhimõistetest ja -printsiipidest. Tutvustatakse säästva arengu kontseptsiooni ja rakendusi erinevates valdkondades. Käsitletakse keskkonnamõjude hindamist ja vähendamist. Õpitakse rakendama keskkonnakaitse meetodeid praktikas.",
-    "õppeaine sisu lühikirjeldus ingl k": "The course provides an overview of basic concepts and principles of environmental protection. The concept and applications of sustainable development in different fields are introduced. Environmental impact assessment and reduction are covered. Students learn to apply environmental protection methods in practice.",
-    "hindamisviis eesti k": "Arvestuse saamiseks tuleb sooritada kontrolltöö ja koostada projekt.",
-    "hindamisviis ingl k": "To pass the course, students must complete a test and prepare a project.",
-    "iseseisev töö eesti k": "Iseseisev töö hõlmab õppematerjalide läbitöötamist, projekti koostamist ja arvestuseks valmistumist.",
-    "iseseisev töö ingl k": "Independent work includes studying materials, preparing a project and preparation for the assessment.",
-    "õppekirjandus": "1. Miller, G. T., Spoolman, S. Environmental Science. Cengage Learning, 2018.\n2. Strange, T., Bayley, A. Sustainable Development: Linking Economy, Society, Environment. OECD, 2014.",
-    "õppevormid ja mahud": "päevaõpe: nädalatunnid3.0sessioonõppe töömahud (semestris):\nloenguid2.0loenguid0.0\npraktikume1.0praktikume0.0\nharjutusi0.0harjutusi0.0",
-    "KEEL_et": "1",
-    "KEEL_en": "1"
-  },
-  {
-    "õppeaine register": "A - põhiregister",
-    "õppeaine kood": "HLX0020",
-    "õppeaine nimetus eesti k": "Akadeemiline inglise keel",
-    "õppeaine nimetus inglise k": "Academic English",
-    "õppeaine maht EAP": "3.00",
-    "deklareeritav": "jah",
-    "õppeaine täies mahus läbitav e-õppes": "jah",
-    "kontrollivorm": "eksam",
-    "õpetamise semester": "sügis",
-    "Õppekavad, millesse aine kuulub": "kavaversiooni koodaine kohustuslik\nSHAB16/25jah",
-    "Ainet õpetavad struktuuriüksused": "SH - humanitaarteaduste instituut",
-    "Ainekaardi link": "http://ois2.taltech.ee/uusois/aine/HLX0020",
-    "Tunniplaani link": "https://tunniplaan.taltech.ee/#/public/subject/113585",
-    "õppeaine eesmärgid eesti k": "- Arendada akadeemilise inglise keele oskust.\n- Tutvustada akadeemiliste tekstide struktuuri ja stiili.\n- Parandada akadeemiliste tekstide kirjutamise oskust.",
-    "õppeaine eesmärgid inglise k": "- To develop academic English language skills.\n- To introduce the structure and style of academic texts.\n- To improve academic writing skills.",
-    "õppeaine õpiväljundid eesti k.": "Üliõpilane:\n- oskab kasutada akadeemilist inglise keelt;\n- tunneb akadeemiliste tekstide struktuuri ja stiili;\n- suudab kirjutada akadeemilisi tekste;\n- oskab esitada akadeemilist infot suuliselt.",
-    "õppeaine õpiväljundid ingl k.": "The student:\n- can use academic English;\n- knows the structure and style of academic texts;\n- can write academic texts;\n- can present academic information orally.",
-    "õppeaine sisu lühikirjeldus eesti k": "Aine arendab akadeemilise inglise keele oskust. Tutvustatakse akadeemiliste tekstide struktuuri ja stiili. Käsitletakse akadeemiliste tekstide kirjutamise põhimõtteid ja meetodeid. Arendatakse akadeemilise info suulise esitamise oskust.",
-    "õppeaine sisu lühikirjeldus ingl k": "The course develops academic English language skills. The structure and style of academic texts are introduced. Principles and methods of academic writing are covered. Skills for oral presentation of academic information are developed.",
-    "hindamisviis eesti k": "Eksam koosneb kirjalikust tööst (70%) ja suulisest esitlusest (30%).",
-    "hindamisviis ingl k": "The exam consists of a written assignment (70%) and an oral presentation (30%).",
-    "iseseisev töö eesti k": "Iseseisev töö hõlmab õppematerjalide läbitöötamist, kirjalike tööde koostamist ja eksamiks valmistumist.",
-    "iseseisev töö ingl k": "Independent work includes studying materials, preparing written assignments and preparation for the exam.",
-    "õppekirjandus": "1. Bailey, S. Academic Writing: A Handbook for International Students. Routledge, 2018.\n2. Hamp-Lyons, L., Heasley, B. Study Writing: A Course in Writing Skills for Academic Purposes. Cambridge University Press, 2016.",
-    "õppevormid ja mahud": "päevaõpe: nädalatunnid3.0sessioonõppe töömahud (semestris):\nloenguid1.0loenguid0.0\npraktikume2.0praktikume0.0\nharjutusi0.0harjutusi0.0",
-    "KEEL_et": "0",
-    "KEEL_en": "1"
-  },
-  {
-    "õppeaine register": "A - põhiregister",
-    "õppeaine kood": "BCU3900",
-    "õppeaine nimetus eesti k": "Biotehnoloogia alused",
-    "õppeaine nimetus inglise k": "Fundamentals of Biotechnology",
-    "õppeaine maht EAP": "6.00",
-    "deklareeritav": "jah",
-    "õppeaine täies mahus läbitav e-õppes": "ei",
-    "kontrollivorm": "eksam",
-    "õpetamise semester": "sügis",
-    "Õppekavad, millesse aine kuulub": "kavaversiooni koodaine kohustuslik\nTKAB16/25jah",
-    "Ainet õpetavad struktuuriüksused": "TK - keemia ja biotehnoloogia instituut",
-    "Ainekaardi link": "http://ois2.taltech.ee/uusois/aine/BCU3900",
-    "Tunniplaani link": "https://tunniplaan.taltech.ee/#/public/subject/113155",
-    "õppeaine eesmärgid eesti k": "- Anda ülevaade biotehnoloogia põhimõistetest ja -printsiipidest.\n- Tutvustada biotehnoloogia rakendusi erinevates valdkondades.\n- Arendada bioprotsesside mõistmise ja juhtimise oskusi.",
-    "õppeaine eesmärgid inglise k": "- To provide an overview of basic concepts and principles of biotechnology.\n- To introduce applications of biotechnology in different fields.\n- To develop skills for understanding and controlling bioprocesses.",
-    "õppeaine õpiväljundid eesti k.": "Üliõpilane:\n- tunneb biotehnoloogia põhimõisteid ja -printsiipe;\n- oskab kirjeldada biotehnoloogia rakendusi erinevates valdkondades;\n- suudab mõista ja juhtida bioprotsesse;\n- oskab teostada lihtsamaid biotehnoloogilisi katseid.",
-    "õppeaine õpiväljundid ingl k.": "The student:\n- knows the basic concepts and principles of biotechnology;\n- can describe applications of biotechnology in different fields;\n- can understand and control bioprocesses;\n- can perform simple biotechnological experiments.",
-    "õppeaine sisu lühikirjeldus eesti k": "Aine annab ülevaate biotehnoloogia põhimõistetest ja -printsiipidest. Tutvustatakse biotehnoloogia rakendusi erinevates valdkondades (meditsiin, toiduainetööstus, põllumajandus, keskkond). Käsitletakse bioprotsesside mõistmist ja juhtimist. Õpitakse teostama lihtsamaid biotehnoloogilisi katseid.",
-    "õppeaine sisu lühikirjeldus ingl k": "The course provides an overview of basic concepts and principles of biotechnology. Applications of biotechnology in different fields (medicine, food industry, agriculture, environment) are introduced. Understanding and controlling bioprocesses are covered. Students learn to perform simple biotechnological experiments.",
-    "hindamisviis eesti k": "Eksam koosneb teooriaosast (60%) ja laboratoorsete tööde hindamisest (40%).",
-    "hindamisviis ingl k": "The exam consists of a theoretical part (60%) and assessment of laboratory works (40%).",
-    "iseseisev töö eesti k": "Iseseisev töö hõlmab õppematerjalide läbitöötamist, laboratoorsete tööde ettevalmistamist ja eksamiks valmistumist.",
-    "iseseisev töö ingl k": "Independent work includes studying materials, preparing for laboratory works and preparation for the exam.",
-    "õppekirjandus": "1. Clark, D. P., Pazdernik, N. J. Biotechnology. Academic Cell, 2016.\n2. Smith, J. E. Biotechnology. Cambridge University Press, 2014.",
-    "õppevormid ja mahud": "päevaõpe: nädalatunnid4.0sessioonõppe töömahud (semestris):\nloenguid2.0loenguid0.0\npraktikume2.0praktikume0.0\nharjutusi0.0harjutusi0.0",
-    "KEEL_et": "1",
-    "KEEL_en": "1"
-  },
-  {
-    "õppeaine register": "A - põhiregister",
-    "õppeaine kood": "ARU0055",
-    "õppeaine nimetus eesti k": "Arhitektuuri alused",
-    "õppeaine nimetus inglise k": "Fundamentals of Architecture",
-    "õppeaine maht EAP": "3.00",
-    "deklareeritav": "jah",
-    "õppeaine täies mahus läbitav e-õppes": "ei",
-    "kontrollivorm": "arvestus",
-    "õpetamise semester": "sügis",
-    "Õppekavad, millesse aine kuulub": "kavaversiooni koodaine kohustuslik\nEAKB16/25jah",
-    "Ainet õpetavad struktuuriüksused": "AR - arhitektuuriteaduskond",
-    "Ainekaardi link": "http://ois2.taltech.ee/uusois/aine/ARU0055",
-    "Tunniplaani link": "https://tunniplaan.taltech.ee/#/public/subject/111755",
-    "õppeaine eesmärgid eesti k": "- Anda ülevaade arhitektuuri põhimõistetest ja -printsiipidest.\n- Tutvustada arhitektuuri ajalugu ja stiile.\n- Arendada ruumilise mõtlemise ja projekteerimise oskusi.",
-    "õppeaine eesmärgid inglise k": "- To provide an overview of basic concepts and principles of architecture.\n- To introduce architectural history and styles.\n- To develop skills for spatial thinking and design.",
-    "õppeaine õpiväljundid eesti k.": "Üliõpilane:\n- tunneb arhitektuuri põhimõisteid ja -printsiipe;\n- oskab kirjeldada arhitektuuri ajalugu ja stiile;\n- suudab mõelda ruumiliselt ja teostada lihtsamaid projekte;\n- oskab analüüsida arhitektuurseid lahendusi.",
-    "õppeaine õpiväljundid ingl k.": "The student:\n- knows the basic concepts and principles of architecture;\n- can describe architectural history and styles;\n- can think spatially and perform simple design projects;\n- can analyze architectural solutions.",
-    "õppeaine sisu lühikirjeldus eesti k": "Aine annab ülevaate arhitektuuri põhimõistetest ja -printsiipidest. Tutvustatakse arhitektuuri ajalugu ja stiile erinevatel perioodidel. Käsitletakse ruumilise mõtlemise ja projekteerimise põhimõtteid. Õpitakse analüüsima arhitektuurseid lahendusi.",
-    "õppeaine sisu lühikirjeldus ingl k": "The course provides an overview of basic concepts and principles of architecture. Architectural history and styles from different periods are introduced. Principles of spatial thinking and design are covered. Students learn to analyze architectural solutions.",
-    "hindamisviis eesti k": "Arvestuse saamiseks tuleb koostada projekt ja esitada see.",
-    "hindamisviis ingl k": "To pass the course, students must prepare and present a project.",
-    "iseseisev töö eesti k": "Iseseisev töö hõlmab õppematerjalide läbitöötamist, projekti koostamist ja arvestuseks valmistumist.",
-    "iseseisev töö ingl k": "Independent work includes studying materials, preparing a project and preparation for the assessment.",
-    "õppekirjandus": "1. Ching, F. D. K. Architecture: Form, Space, and Order. Wiley, 2014.\n2. Rasmussen, S. E. Experiencing Architecture. The MIT Press, 2012.",
-    "õppevormid ja mahud": "päevaõpe: nädalatunnid3.0sessioonõppe töömahud (semestris):\nloenguid1.5loenguid0.0\npraktikume1.5praktikume0.0\nharjutusi0.0harjutusi0.0",
-    "KEEL_et": "1",
-    "KEEL_en": "0"
-  },
-  {
-    "õppeaine register": "A - põhiregister",
-    "õppeaine kood": "RAR3130",
-    "õppeaine nimetus eesti k": "Rahanduse alused",
-    "õppeaine nimetus inglise k": "Fundamentals of Finance",
-    "õppeaine maht EAP": "6.00",
-    "deklareeritav": "jah",
-    "õppeaine täies mahus läbitav e-õppes": "jah",
-    "kontrollivorm": "eksam",
-    "õpetamise semester": "sügis",
-    "Õppekavad, millesse aine kuulub": "kavaversiooni koodaine kohustuslik\nTAMB16/25jah",
-    "Ainet õpetavad struktuuriüksused": "ME - majandusteaduskond",
-    "Ainekaardi link": "http://ois2.taltech.ee/uusois/aine/RAR3130",
-    "Tunniplaani link": "https://tunniplaan.taltech.ee/#/public/subject/112855",
-    "õppeaine eesmärgid eesti k": "- Anda ülevaade rahanduse põhimõistetest ja -printsiipidest.\n- Tutvustada finantsturgude toimimist ja investeerimist.\n- Arendada finantsotsuste tegemise oskusi.",
-    "õppeaine eesmärgid inglise k": "- To provide an overview of basic concepts and principles of finance.\n- To introduce the functioning of financial markets and investment.\n- To develop skills for making financial decisions.",
-    "õppeaine õpiväljundid eesti k.": "Üliõpilane:\n- tunneb rahanduse põhimõisteid ja -printsiipe;\n- oskab kirjeldada finantsturgude toimimist ja investeerimist;\n- suudab teha finantsotsuseid;\n- oskab analüüsida finantsaruandeid.",
-    "õppeaine õpiväljundid ingl k.": "The student:\n- knows the basic concepts and principles of finance;\n- can describe the functioning of financial markets and investment;\n- can make financial decisions;\n- can analyze financial statements.",
-    "õppeaine sisu lühikirjeldus eesti k": "Aine annab ülevaate rahanduse põhimõistetest ja -printsiipidest. Tutvustatakse finantsturgude toimimist ja investeerimist. Käsitletakse finantsotsuste tegemist erinevates kontekstides. Õpitakse analüüsima finantsaruandeid ja tegema investeerimisotsuseid.",
-    "õppeaine sisu lühikirjeldus ingl k": "The course provides an overview of basic concepts and principles of finance. The functioning of financial markets and investment are introduced. Making financial decisions in different contexts is covered. Students learn to analyze financial statements and make investment decisions.",
-    "hindamisviis eesti k": "Eksam koosneb teooriaosast (50%) ja praktilisest ülesandest (50%).",
-    "hindamisviis ingl k": "The exam consists of a theoretical part (50%) and a practical task (50%).",
-    "iseseisev töö eesti k": "Iseseisev töö hõlmab õppematerjalide läbitöötamist, praktiliste ülesannete lahendamist ja eksamiks valmistumist.",
-    "iseseisev töö ingl k": "Independent work includes studying materials, solving practical tasks and preparation for the exam.",
-    "õppekirjandus": "1. Brealey, R. A., Myers, S. C., Allen, F. Principles of Corporate Finance. McGraw-Hill, 2016.\n2. Bodie, Z., Kane, A., Marcus, A. J. Investments. McGraw-Hill, 2018.",
-    "õppevormid ja mahud": "päevaõpe: nädalatunnid4.0sessioonõppe töömahud (semestris):\nloenguid2.0loenguid0.0\npraktikume2.0praktikume0.0\nharjutusi0.0harjutusi0.0",
-    "KEEL_et": "1",
-    "KEEL_en": "1"
-  },
-  {
-    "õppeaine register": "A - põhiregister",
-    "õppeaine kood": "YMR0050",
-    "õppeaine nimetus eesti k": "Kõrgem matemaatika I",
-    "õppeaine nimetus inglise k": "Mathematics I",
-    "õppeaine maht EAP": "6.00",
-    "deklareeritav": "jah",
-    "õppeaine täies mahus läbitav e-õppes": "ei",
-    "kontrollivorm": "eksam",
-    "õpetamise semester": "sügis",
-    "Õppekavad, millesse aine kuulub": "kavaversiooni koodaine kohustuslik\nMATB14/25jah",
-    "Ainet õpetavad struktuuriüksused": "KM - küberneetika instituut",
-    "Ainekaardi link": "http://ois2.taltech.ee/uusois/aine/YMR0050",
-    "Tunniplaani link": "https://tunniplaan.taltech.ee/#/public/subject/112455",
-    "õppeaine eesmärgid eesti k": "- Anda ülevaade matemaatika põhimõistetest ja -meetoditest.\n- Tutvustada diferentsiaal- ja integraalarvutust.\n- Arendada matemaatilise mõtlemise ja probleemilahenduse oskusi.",
-    "õppeaine eesmärgid inglise k": "- To provide an overview of basic mathematical concepts and methods.\n- To introduce differential and integral calculus.\n- To develop skills for mathematical thinking and problem-solving.",
-    "õppeaine õpiväljundid eesti k.": "Üliõpilane:\n- tunneb matemaatika põhimõisteid ja -meetodeid;\n- oskab kasutada diferentsiaal- ja integraalarvutust;\n- suudab lahendada matemaatilisi probleeme;\n- oskab rakendada matemaatilisi meetodeid praktikas.",
-    "õppeaine õpiväljundid ingl k.": "The student:\n- knows basic mathematical concepts and methods;\n- can use differential and integral calculus;\n- can solve mathematical problems;\n- can apply mathematical methods in practice.",
-    "õppeaine sisu lühikirjeldus eesti k": "Aine annab ülevaate matemaatika põhimõistetest ja -meetoditest. Tutvustatakse diferentsiaal- ja integraalarvutust ning nende rakendusi. Käsitletakse matemaatilise mõtlemise ja probleemilahenduse põhimõtteid. Õpitakse rakendama matemaatilisi meetodeid praktikas.",
-    "õppeaine sisu lühikirjeldus ingl k": "The course provides an overview of basic mathematical concepts and methods. Differential and integral calculus and their applications are introduced. Principles of mathematical thinking and problem-solving are covered. Students learn to apply mathematical methods in practice.",
-    "hindamisviis eesti k": "Eksam koosneb teooriaosast (40%) ja praktilisest osast (60%).",
-    "hindamisviis ingl k": "The exam consists of a theoretical part (40%) and a practical part (60%).",
-    "iseseisev töö eesti k": "Iseseisev töö hõlmab õppematerjalide läbitöötamist, praktiliste ülesannete lahendamist ja eksamiks valmistumist.",
-    "iseseisev töö ingl k": "Independent work includes studying materials, solving practical tasks and preparation for the exam.",
-    "õppekirjandus": "1. Stewart, J. Calculus: Early Transcendentals. Cengage Learning, 2016.\n2. Anton, H., Bivens, I., Davis, S. Calculus: Early Transcendentals. Wiley, 2015.",
-    "õppevormid ja mahud": "päevaõpe: nädalatunnid4.0sessioonõppe töömahud (semestris):\nloenguid2.0loenguid0.0\npraktikume2.0praktikume0.0\nharjutusi0.0harjutusi0.0",
-    "KEEL_et": "1",
-    "KEEL_en": "1"
-  }
-                ];
-                console.log("Raw course data loaded:", allCourses.length);
-
-                // Transform the data structure to match what the application expects
-                allCourses = allCourses.map(course => ({
-                    id: course["õppeaine kood"],
-                    name_et: course["õppeaine nimetus eesti k"],
-                    name_en: course["õppeaine nimetus inglise k"],
-                    eap: parseFloat(course["õppeaine maht EAP"]),
-                    semester_et: course["õpetamise semester"],
-                    semester_en: course["õpetamise semester"] === "sügis" ? "fall" : 
-                               course["õpetamise semester"] === "kevad" ? "spring" : 
-                               course["õpetamise semester"] === "suvi" ? "summer" : 
-                               course["õpetamise semester"],
-                    assessment_form_et: course["kontrollivorm"],
-                    assessment_form_en: course["kontrollivorm"] === "eksam" ? "exam" : 
-                                      course["kontrollivorm"] === "arvestus" ? "pass/fail" : 
-                                      course["kontrollivorm"] === "diferentseeritud arvestus" ? "graded pass/fail" : 
-                                      course["kontrollivorm"],
-                    objectives_et: course["õppeaine eesmärgid eesti k"],
-                    objectives_en: course["õppeaine eesmärgid inglise k"],
-                    learning_outcomes_et: course["õppeaine õpiväljundid eesti k."],
-                    learning_outcomes_en: course["õppeaine õpiväljundid ingl k."],
-                    description_short_et: course["õppeaine sisu lühikirjeldus eesti k"],
-                    description_short_en: course["õppeaine sisu lühikirjeldus ingl k"],
-                    literature_et: course["õppekirjandus"],
-                    literature_en: course["õppekirjandus"],
-                    school_code: course["Ainet õpetavad struktuuriüksused"]?.split(" - ")[0] || "",
-                    school_name: course["Ainet õpetavad struktuuriüksused"]?.includes("instituut") ? "Inseneriteaduskond" : 
-                               course["Ainet õpetavad struktuuriüksused"]?.includes("kool") ? course["Ainet õpetavad struktuuriüksused"] : 
-                               "Muu",
-                    institute_name: course["Ainet õpetavad struktuuriüksused"],
-                    keel_et: course["KEEL_et"],
-                    keel_en: course["KEEL_en"],
-                    course_card_link: course["Ainekaardi link"],
-                    timetable_link: course["Tunniplaani link"],
-                    keywords_et: course["õppeaine sisu lühikirjeldus eesti k"]?.split(/[,\.\s]+/).filter(word => word.length > 4).slice(0, 5) || [],
-                    keywords_en: course["õppeaine sisu lühikirjeldus ingl k"]?.split(/[,\.\s]+/).filter(word => word.length > 4).slice(0, 5) || [],
-                    interests: course["Ainet õpetavad struktuuriüksused"]?.includes("elektro") ? ["Engineering", "Technology"] : 
-                             course["Ainet õpetavad struktuuriüksused"]?.includes("informaatika") ? ["Computer Science", "Technology"] : 
-                             course["Ainet õpetavad struktuuriüksused"]?.includes("ehitus") ? ["Engineering", "Construction"] : 
-                             ["General"]
-                }));
+                const response = await fetch('courses.json'); // MAKE SURE THIS FILE EXISTS AND IS ACCESSIBLE
+                console.log("Fetch response status:", response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}, Nimi: courses.json`);
+                }
+                allCourses = await response.json();
+                console.log("Courses loaded:", allCourses.length);
 
                 allCourses.forEach(course => {
                     if (course.interests && Array.isArray(course.interests)) {
@@ -1382,7 +1023,7 @@
             } catch (error) {
                 console.error("Could not load or initialize courses:", error);
                 if (courseListContainerDOM) {
-                     courseListContainerDOM.innerHTML = `<p class="text-red-500 text-center col-span-full">Viga kursuste laadimisel (${error.message}). Palun kontrolli, et fail "courses_25s.json" on olemas ja proovi hiljem uuesti.</p>`;
+                     courseListContainerDOM.innerHTML = `<p class="text-red-500 text-center col-span-full">Viga kursuste laadimisel (${error.message}). Palun kontrolli, et fail "courses.json" on olemas ja proovi hiljem uuesti.</p>`;
                 } else {
                     alert(`Viga kursuste laadimisel (${error.message}). Palun kontrolli, et fail "courses.json" on olemas ja proovi hiljem uuesti.`);
                 }
