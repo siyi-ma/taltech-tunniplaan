@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TalTech kursused kevad 2025</title> <!-- CHANGED TITLE -->
+    <title>TalTech kursused kevad 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -106,11 +106,10 @@
     <header class="sticky top-0 z-50 bg-tt-dark-blue text-white p-4 shadow-md">
         <div class="container mx-auto flex items-center justify-between">
             <div class="flex items-center">
-                <!-- CHANGED FILTER TOGGLE BUTTON APPEARANCE -->
-                <button id="filterToggleButton" class="mr-4 p-3 text-tt-light-blue hover:bg-tt-dark-blue-hover rounded-full" aria-label="Ava filtrid">
-                    <i class="fas fa-filter fa-lg"></i> <!-- Changed icon -->
+                <button id="filterToggleButton" class="mr-4 p-2 text-white hover:bg-tt-dark-blue-hover rounded" aria-label="Ava filtrid">
+                    <i class="fas fa-bars fa-lg"></i>
                 </button>
-                <h1 id="pageTitle" class="text-2xl proxima-nova-bold uppercase">TalTech kursused kevad 2025</h1> <!-- CHANGED TITLE -->
+                <h1 id="pageTitle" class="text-2xl proxima-nova-bold uppercase">TalTech kursused kevad 2025</h1>
             </div>
             <button id="languageToggle" class="p-2 bg-tt-magenta hover:bg-opacity-80 rounded" aria-label="Switch language">
                 <i class="fas fa-globe"></i> <span id="langIndicator">EN</span>
@@ -119,18 +118,18 @@
     </header>
 
     <!-- Search Area -->
-    <div class="container mx-auto p-4 my-4 bg-gray-50 rounded shadow">
+    <div class="container mx-auto p-4 my-4 bg-gray-50 bg-opacity-90 rounded shadow">
         <div class="flex flex-col md:flex-row md:items-end gap-4">
-            <div class="flex-grow relative">
+            <div class="flex-grow relative md:w-3/5">
                 <label for="searchInput" id="searchInputLabel" class="block text-sm font-medium text-gray-700 mb-1">Otsisõna</label>
-                <input type="search" id="searchInput" class="p-2 border border-gray-300 rounded-md w-full body-text" placeholder="Sisesta otsisõna...">
+                <input type="search" id="searchInput" class="p-2 border border-gray-300 bg-white bg-opacity-90 rounded-md w-full body-text" placeholder="Sisesta otsisõna...">
                 <div id="suggestionsContainer" class="absolute left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-[60] hidden max-h-60 overflow-y-auto text-sm">
                     <!-- Suggestions -->
                 </div>
             </div>
-            <div>
+            <div class="md:w-1/5">
                 <label for="searchFieldSelector" id="searchFieldSelectorLabel" class="block text-sm font-medium text-gray-700 mb-1">Otsi väljal</label>
-                <select id="searchFieldSelector" class="p-2 border border-gray-300 rounded-md w-full md:w-auto text-sm h-[2.625rem]"> 
+                <select id="searchFieldSelector" class="p-2 border border-gray-300 bg-white bg-opacity-90 rounded-md w-full text-sm h-[2.625rem]"> 
                     <option value="all">Kõik väljad</option>
                     <option value="title">Aine nimetus / Course name</option>
                     <option value="course_id">Kursuse kood</option>
@@ -150,8 +149,7 @@
 
 
     <!-- Filter Panel -->
-    <!-- CHANGED WIDTH CLASSES FOR NARROWER PANEL -->
-    <aside id="filterPanel" class="bg-gray-50 p-4 shadow-lg fixed inset-y-0 left-0 transform -translate-x-full z-40 w-11/12 sm:w-3/4 md:w-1/2 lg:w-2/5 xl:w-1/3 overflow-y-auto max-h-screen transition-transform duration-300 ease-in-out rounded-r-lg">
+    <aside id="filterPanel" class="bg-gray-50 bg-opacity-95 p-4 shadow-lg fixed inset-y-0 left-0 transform -translate-x-full z-40 w-3/5 sm:w-2/5 md:w-1/3 lg:w-1/4 xl:w-1/5 overflow-y-auto mt-16 max-h-[calc(100%-4rem)] transition-transform duration-300 ease-in-out rounded-r-lg">
         <div class="flex justify-between items-center mb-4">
             <h2 id="filtersTitle" class="text-xl headline tt-dark-blue">Filtrid</h2>
             <button id="closeFilterButton" class="text-tt-magenta hover:text-tt-dark-blue">
@@ -225,11 +223,11 @@
 
     <!-- Main Content Area -->
     <div class="container mx-auto p-4">
-        <div id="activeFiltersDisplay" class="mb-4">
-            <!-- Active filter pills will be injected here -->
-        </div>
-        <div id="searchResultCount" class="mb-4 text-sm text-tt-grey-1">
-            <!-- Search result count will be injected here -->
+        <div class="flex justify-between items-center mb-4">
+            <div id="resultsCounter" class="text-tt-dark-blue font-semibold"></div>
+            <div id="activeFiltersDisplay">
+                <!-- Active filter pills will be injected here -->
+            </div>
         </div>
         <main id="courseList" class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         </main>
@@ -243,7 +241,7 @@
     </div>
 
     <script>
-        // DOM Elements (defined once)
+        // Ensure all DOM element variables are declared at the top
         const searchInputDOM = document.getElementById('searchInput');
         const searchFieldSelectorDOM = document.getElementById('searchFieldSelector');
         const searchButtonDOM = document.getElementById('searchButton');
@@ -252,7 +250,6 @@
         const languageToggleDOM = document.getElementById('languageToggle');
         const courseListContainerDOM = document.getElementById('courseList');
         const activeFiltersDisplayDOM = document.getElementById('activeFiltersDisplay');
-        const searchResultCountDOM = document.getElementById('searchResultCount'); // New
         const schoolFilterDOM = document.getElementById('schoolFilter');
         const instituteFilterDOM = document.getElementById('instituteFilter');
         const eapFilterRadiosDOM = document.querySelectorAll('input[name="eapFilter"]');
@@ -262,7 +259,8 @@
         const filterPanelDOM = document.getElementById('filterPanel');
         const filterToggleButtonDOM = document.getElementById('filterToggleButton');
         const closeFilterButtonDOM = document.getElementById('closeFilterButton');
-        const pageTitleDOM = document.getElementById('pageTitle');
+        const pageTitleDOM = document.getElementById('pageTitle'); // Added for completeness
+        const resultsCounterDOM = document.getElementById('resultsCounter');
 
         let allCourses = [];
         let filteredCourses = [];
@@ -271,7 +269,7 @@
         const MAX_SUGGESTIONS = 7;
 
         const uiTexts = {
-            pageTitle: { et: 'TalTech kursused kevad 2025', en: 'TalTech Courses Spring 2025' }, // CHANGED
+            pageTitle: { et: 'TalTech kursused kevad 2025', en: 'TalTech Courses Spring 2025' },
             searchInputLabel: { et: 'Otsisõna', en: 'Search term' },
             searchPlaceholder: { et: 'Sisesta otsisõna...', en: 'Insert search word...' },
             searchFieldSelectorLabel: { et: 'Otsi väljal', en: 'Search in field' },
@@ -281,9 +279,9 @@
             searchField_keyword: { et: 'Märksõna/Huviala', en: 'Keyword/Interest' },
             searchButtonText: { et: 'Otsi', en: 'Search' },
             resetSearchButtonText: { et: 'Lähtesta', en: 'Reset' },
+            resultsFoundText: { et: 'Leitud kursust', en: 'Found courses' },
             activeFiltersHeader: { et: 'Valitud filtrid:', en: 'Selected filters:'},
             clearAllFiltersButton: { et: 'Eemalda kõik filtrid', en: 'Clear all filters'},
-            searchResultCountText: { et: (count) => `Leiti ${count} kursust.`, en: (count) => `Found ${count} courses.` }, // New
             langIndicator: { et: 'EN', en: 'ET' },
             filterToggleButtonLabelOpen: { et: 'Ava filtrid', en: 'Open Filters' },
             filterToggleButtonLabelClose: { et: 'Sulge filtrid', en: 'Close Filters' },
@@ -339,6 +337,7 @@
         }
 
         function setLanguage(lang) {
+            console.log("Setting language to:", lang);
             currentLanguage = lang;
             document.documentElement.lang = lang;
             hideSuggestions();
@@ -348,15 +347,13 @@
         }
 
         function updateAllUITexts() {
+            console.log("Updating UI texts for language:", currentLanguage);
             Object.keys(uiTexts).forEach(key => {
                 const element = document.getElementById(key);
                 if (element) {
                      if (element.id === 'searchInput' && key === 'searchPlaceholder') {
                         element.placeholder = uiTexts[key][currentLanguage];
-                    } else if (typeof uiTexts[key] === 'function') { // For dynamic text like searchResultCountText
-                        // This will be handled by renderCourses for searchResultCountDOM specifically
-                    }
-                    else {
+                    } else {
                          element.textContent = uiTexts[key][currentLanguage];
                     }
                 }
@@ -373,18 +370,7 @@
 
 
             const filterPanelIsOpen = filterPanelDOM ? filterPanelDOM.classList.contains('filter-drawer-open') : false;
-            if (filterToggleButtonDOM) {
-                 filterToggleButtonDOM.setAttribute('aria-label', uiTexts[filterPanelIsOpen ? 'filterToggleButtonLabelClose' : 'filterToggleButtonLabelOpen'][currentLanguage]);
-                 // Update icon based on state directly here as well if needed
-                 const icon = filterToggleButtonDOM.querySelector('i');
-                 if (icon) {
-                    if(filterPanelIsOpen) {
-                        icon.classList.remove('fa-filter'); icon.classList.add('fa-times');
-                    } else {
-                        icon.classList.remove('fa-times'); icon.classList.add('fa-filter');
-                    }
-                 }
-            }
+            if (filterToggleButtonDOM) filterToggleButtonDOM.setAttribute('aria-label', uiTexts[filterPanelIsOpen ? 'filterToggleButtonLabelClose' : 'filterToggleButtonLabelOpen'][currentLanguage]);
         }
 
         function createCourseCardHTML(course) {
@@ -422,23 +408,31 @@
                 <div class="bg-white rounded-lg shadow-md border border-tt-grey-1 overflow-hidden flex flex-col">
                     <div class="p-4">
                         <div class="flex justify-between items-start mb-1">
-                            <h2 class="text-lg proxima-nova-bold tt-dark-blue uppercase flex-grow pr-2">${nameEt}</h2>
-                            ${courseId ? `<span class="text-base tt-dark-blue font-mono whitespace-nowrap">${courseId}</span>` : ''} <!-- CHANGED COURSE ID APPEARANCE -->
+                            <h2 class="text-lg proxima-nova-bold uppercase flex-grow pr-2">
+                                ${course.course_card_link ? `<a href="${course.course_card_link}" target="_blank" class="tt-magenta hover:underline">${nameEt}</a>` : `<span class="tt-dark-blue">${nameEt}</span>`}
+                            </h2>
+                            ${courseId ? `<span class="text-md proxima-nova-bold tt-dark-blue whitespace-nowrap">${courseId}</span>` : ''}
                         </div>
-                        ${nameEt.toLowerCase() !== nameEn.toLowerCase() ? `<h3 class="text-md tt-grey-1 mb-2">${nameEn}</h3>` : ''}
-
-                        <div class="mb-2 text-sm tt-grey-1">
-                            <span class="tooltip">${course.eap} <span>${uiTexts.eapTooltip[currentLanguage]}</span><span class="tooltiptext body-text">${course.eap} ${uiTexts.eapFull[currentLanguage]}</span></span>
+                        <div class="flex justify-between items-center mb-2">
+                            <div>
+                                ${nameEt.toLowerCase() !== nameEn.toLowerCase() ? `<h3 class="text-md tt-grey-1">${nameEn}</h3>` : ''}
+                            </div>
+                            ${course.timetable_link ? `<a href="${course.timetable_link}" target="_blank" class="text-tt-magenta text-sm hover:underline"><i class="fas fa-calendar-alt mr-1"></i>${uiTexts.timetableLink[currentLanguage]}</a>` : ''}
                         </div>
-                        <div class="mb-3 flex flex-wrap gap-2">
+                        
+                        <div class="mb-3 flex flex-wrap gap-2 items-center">
                             ${schoolName ? `<span class="inline-block bg-gray-200 text-gray-700 text-xs font-semibold px-2.5 py-0.5 rounded">${schoolName}</span>` : ''}
                             ${langDisplayTag ? `<span class="inline-block bg-tt-light-blue text-white text-xs font-semibold px-2.5 py-0.5 rounded">${langDisplayTag}</span>` : ''}
+                            <span class="inline-block bg-gray-200 text-tt-dark-blue text-xs font-semibold px-2.5 py-0.5 rounded tooltip">
+                                ${course.eap} ${uiTexts.eapTooltip[currentLanguage]}
+                                <span class="tooltiptext body-text">${course.eap} ${uiTexts.eapFull[currentLanguage]}</span>
+                            </span>
                         </div>
                         <p class="text-sm text-gray-700 mb-3 body-text h-20 overflow-y-auto">${descriptionShort || (currentLanguage === 'et' ? 'Kirjeldus puudub' : 'No description')}</p>
                     </div>
                     <div class="px-4 pb-4 mt-auto">
                         <button class="expand-button text-tt-magenta hover:text-tt-dark-blue text-sm proxima-nova-bold" aria-expanded="false" aria-controls="details-${course.id}">
-                            <i class="fas fa-plus mr-1"></i> <span data-show="${uiTexts.showMore[currentLanguage]}" data-hide="${uiTexts.showLess[currentLanguage]}">${uiTexts.showMore[currentLanguage]}</span>
+                            <i class="fas fa-plus" data-show="fa-plus" data-hide="fa-minus"></i>
                         </button>
                     </div>
                     <div id="details-${course.id}" class="expandable-content hidden p-4 border-t border-tt-grey-1 bg-gray-50">
@@ -456,23 +450,29 @@
                         <h4 class="font-semibold tt-dark-blue mb-1 headline">${uiTexts.literature[currentLanguage]}</h4>
                         <ul class="list-disc list-inside text-sm mb-3 body-text">${literatureList}</ul>` : ''}
                         
-                        <div class="mt-4 text-sm">
-                            ${course.course_card_link ? `<a href="${course.course_card_link}" target="_blank" class="text-tt-magenta hover:underline mr-4"><i class="fas fa-link mr-1"></i>${uiTexts.courseCardLink[currentLanguage]}</a>` : ''}
-                            ${course.timetable_link ? `<a href="${course.timetable_link}" target="_blank" class="text-tt-magenta hover:underline"><i class="fas fa-calendar-alt mr-1"></i>${uiTexts.timetableLink[currentLanguage]}</a>` : ''}
-                        </div>
+                        <!-- Links removed from here and moved to the top section -->
+                        
                     </div>
                 </div>
             `;
         }
 
         function renderCourses(coursesToRender) {
-            if (!courseListContainerDOM || !searchResultCountDOM) {
-                console.error("Core DOM elements for rendering courses are missing!");
+            if (!courseListContainerDOM) {
+                console.error("courseListContainerDOM is not found!");
                 return;
             }
             courseListContainerDOM.innerHTML = '';
-            searchResultCountDOM.textContent = uiTexts.searchResultCountText[currentLanguage](coursesToRender.length); // Update result count
-
+            
+            // Update results counter
+            if (resultsCounterDOM) {
+                if (coursesToRender.length === 0) {
+                    resultsCounterDOM.textContent = currentLanguage === 'et' ? 'Leitud 0 kursust' : 'Found 0 courses';
+                } else {
+                    resultsCounterDOM.textContent = `${coursesToRender.length} ${uiTexts.resultsFoundText[currentLanguage]}`;
+                }
+            }
+            
             if (coursesToRender.length === 0) {
                 courseListContainerDOM.innerHTML = `<p class="text-center text-tt-grey-1 col-span-full">${uiTexts.noCoursesFound[currentLanguage]}</p>`;
                 return;
@@ -482,15 +482,19 @@
                 courseListContainerDOM.insertAdjacentHTML('beforeend', cardHTML);
             });
             addExpandButtonListeners();
-            document.querySelectorAll('.expand-button span').forEach(span => {
-                const parentButton = span.closest('button');
+            document.querySelectorAll('.expand-button i').forEach(icon => {
+                const parentButton = icon.closest('button');
                 if (!parentButton) return;
                 const content = parentButton.closest('div.flex-col').querySelector('.expandable-content');
-                 if (!content) return;
+                if (!content) return;
                 const isHidden = content.classList.contains('hidden');
-                span.textContent = isHidden ? uiTexts.showMore[currentLanguage] : uiTexts.showLess[currentLanguage];
-                span.dataset.show = uiTexts.showMore[currentLanguage];
-                span.dataset.hide = uiTexts.showLess[currentLanguage];
+                if (!isHidden) {
+                    icon.classList.remove(icon.dataset.show);
+                    icon.classList.add(icon.dataset.hide);
+                } else {
+                    icon.classList.remove(icon.dataset.hide);
+                    icon.classList.add(icon.dataset.show);
+                }
             });
         }
         
@@ -507,12 +511,12 @@
                     content.classList.toggle('hidden');
                     button.setAttribute('aria-expanded', String(!isCurrentlyHidden));
 
-                    if (!isCurrentlyHidden) { 
-                        icon.classList.remove('fa-plus'); icon.classList.add('fa-minus');
-                        span.textContent = span.dataset.hide;
+                    if (isCurrentlyHidden) { 
+                        icon.classList.remove(icon.dataset.show); 
+                        icon.classList.add(icon.dataset.hide);
                     } else { 
-                        icon.classList.remove('fa-minus'); icon.classList.add('fa-plus');
-                        span.textContent = span.dataset.show;
+                        icon.classList.remove(icon.dataset.hide); 
+                        icon.classList.add(icon.dataset.show);
                     }
                 });
                 button.dataset.listenerAttached = 'true';
@@ -666,6 +670,7 @@
                 (course.keywords_en || []).forEach(kw => uniqueSearchableTerms.add(kw));
                 (course.interests || []).forEach(interest => uniqueSearchableTerms.add(interest));
             });
+            console.log("Compiled unique searchable terms:", uniqueSearchableTerms.size);
         }
 
         function escapeRegExp(string) {
@@ -758,18 +763,18 @@
         function renderActiveFiltersDisplay() {
             if (!activeFiltersDisplayDOM) return;
             activeFiltersDisplayDOM.innerHTML = '';
-            let hasAnyFilterApplied = false; // Use a more descriptive name
+            let hasActiveFilter = false;
             const pillsHTML = [];
 
             if (activeFilters.searchTerm) {
-                hasAnyFilterApplied = true;
+                hasActiveFilter = true;
                 let fieldLabel = uiTexts[`searchField_${activeFilters.searchFieldType}`] ? uiTexts[`searchField_${activeFilters.searchFieldType}`][currentLanguage] : activeFilters.searchFieldType;
                 pillsHTML.push(`<span class="filter-pill">${fieldLabel}: "${activeFilters.searchTerm}" 
                                 <button class="filter-pill-remove" data-filtertype="searchTerm" aria-label="Eemalda otsingusõna">&times;</button>
                                </span>`);
             }
             if (activeFilters.school && schoolFilterDOM) {
-                hasAnyFilterApplied = true;
+                hasActiveFilter = true;
                 const schoolOption = Array.from(schoolFilterDOM.options).find(opt => opt.value === activeFilters.school);
                 const schoolName = schoolOption ? schoolOption.textContent : activeFilters.school;
                 pillsHTML.push(`<span class="filter-pill">${uiTexts.schoolFilterLabel[currentLanguage]}: ${schoolName} 
@@ -777,7 +782,7 @@
                                </span>`);
             }
             if (activeFilters.institute && instituteFilterDOM) {
-                 hasAnyFilterApplied = true;
+                 hasActiveFilter = true;
                  const instituteOption = Array.from(instituteFilterDOM.options).find(opt => opt.value === activeFilters.institute);
                  const instituteName = instituteOption ? instituteOption.textContent : activeFilters.institute;
                  pillsHTML.push(`<span class="filter-pill">${uiTexts.instituteFilterLabel[currentLanguage]}: ${instituteName}
@@ -785,33 +790,40 @@
                                 </span>`);
             }
             if (activeFilters.eap) {
-                hasAnyFilterApplied = true;
+                hasActiveFilter = true;
                 pillsHTML.push(`<span class="filter-pill">${uiTexts.eapFilterLabel[currentLanguage]}: ${activeFilters.eap} EAP
                                 <button class="filter-pill-remove" data-filtertype="eap" aria-label="Eemalda EAP filter">&times;</button>
                                </span>`);
             }
             if (activeFilters.assessmentForm && assessmentFormFilterDOM) {
-                hasAnyFilterApplied = true;
+                hasActiveFilter = true;
                  const formOption = Array.from(assessmentFormFilterDOM.options).find(opt => opt.value === activeFilters.assessmentForm);
                  const formName = formOption ? formOption.textContent : activeFilters.assessmentForm;
                 pillsHTML.push(`<span class="filter-pill">${uiTexts.assessmentFormFilterLabel[currentLanguage]}: ${formName}
                                 <button class="filter-pill-remove" data-filtertype="assessmentForm" aria-label="Eemalda hindamisvormi filter">&times;</button>
                                </span>`);
             }
-            if (activeFilters.teachingLanguage) { // This will be true if a specific lang (not "") is selected
-                hasAnyFilterApplied = true;
+            if (activeFilters.teachingLanguage) { 
+                hasActiveFilter = true;
                 let langLabel = '';
                 if (activeFilters.teachingLanguage === 'et') langLabel = uiTexts.langEtLabel[currentLanguage];
                 else if (activeFilters.teachingLanguage === 'en') langLabel = uiTexts.langEnLabel[currentLanguage];
                 else if (activeFilters.teachingLanguage === 'et+en') langLabel = uiTexts.langEtEnLabel[currentLanguage];
-                // No need for "All" as "" teachingLanguage means no pill for it.
+                // No need for fallback to "All" here, as "" means no language filter active for display
                 
-                pillsHTML.push(`<span class="filter-pill">${uiTexts.languageFilterLabel[currentLanguage]}: ${langLabel}
-                                <button class="filter-pill-remove" data-filtertype="teachingLanguage" aria-label="Eemalda õppekeele filter">&times;</button>
-                               </span>`);
+                if (activeFilters.teachingLanguage !== "") { // Only show pill if not "All"
+                    pillsHTML.push(`<span class="filter-pill">${uiTexts.languageFilterLabel[currentLanguage]}: ${langLabel}
+                                    <button class="filter-pill-remove" data-filtertype="teachingLanguage" aria-label="Eemalda õppekeele filter">&times;</button>
+                                </span>`);
+                } else { // If it was the only active filter, and now it's "" (All), recalculate hasActiveFilter
+                    hasActiveFilter = Object.values(activeFilters).some((val, index) => {
+                        // Check if any other filter (not teachingLanguage, which is now "") is active
+                        return index !== Object.keys(activeFilters).indexOf('teachingLanguage') && val !== '' && val !== 'all';
+                    });
+                }
             }
 
-            if (hasAnyFilterApplied) {
+            if (hasActiveFilter) {
                 activeFiltersDisplayDOM.innerHTML = `
                     <div class="flex flex-wrap items-center mb-2">
                         <strong class="mr-2 body-text">${uiTexts.activeFiltersHeader[currentLanguage]}</strong>
@@ -887,6 +899,7 @@
         }
         
         function setupEventListeners() {
+            console.log("Setting up event listeners...");
             if (languageToggleDOM) languageToggleDOM.addEventListener('click', () => {
                 setLanguage(currentLanguage === 'et' ? 'en' : 'et');
             });
@@ -915,7 +928,7 @@
                 activeFilters.searchTerm = '';
                 activeFilters.searchFieldType = 'all';
                 hideSuggestions();
-                clearAllFilters(); // Reset all other filters too for a full reset
+                applyAllFiltersAndRenderDisplay();
             });
             
             document.addEventListener('click', (e) => {
@@ -960,10 +973,10 @@
                 const isOpen = filterPanelDOM.classList.toggle('filter-drawer-open');
                 const icon = filterToggleButtonDOM.querySelector('i');
                 if (isOpen) {
-                    icon.classList.remove('fa-filter'); icon.classList.add('fa-times');
+                    icon.classList.remove('fa-bars'); icon.classList.add('fa-times');
                     filterToggleButtonDOM.setAttribute('aria-label', uiTexts.filterToggleButtonLabelClose[currentLanguage]);
                 } else {
-                    icon.classList.remove('fa-times'); icon.classList.add('fa-filter');
+                    icon.classList.remove('fa-times'); icon.classList.add('fa-bars');
                     filterToggleButtonDOM.setAttribute('aria-label', uiTexts.filterToggleButtonLabelOpen[currentLanguage]);
                 }
             });
@@ -971,19 +984,23 @@
                  if (!filterPanelDOM || !filterToggleButtonDOM) return;
                 filterPanelDOM.classList.remove('filter-drawer-open');
                 const icon = filterToggleButtonDOM.querySelector('i');
-                icon.classList.remove('fa-times'); icon.classList.add('fa-filter');
+                icon.classList.remove('fa-times'); icon.classList.add('fa-bars');
                 filterToggleButtonDOM.setAttribute('aria-label', uiTexts.filterToggleButtonLabelOpen[currentLanguage]);
             });
+             console.log("Event listeners setup complete.");
         }
 
         async function initializeApp() {
+            console.log("Initializing app...");
             if (loadingIndicatorDOM) loadingIndicatorDOM.classList.remove('hidden');
             try {
-                const response = await fetch('courses.json'); 
+                const response = await fetch('courses.json'); // MAKE SURE THIS FILE EXISTS AND IS ACCESSIBLE
+                console.log("Fetch response status:", response.status);
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}, File: courses.json`);
+                    throw new Error(`HTTP error! status: ${response.status}, Nimi: courses.json`);
                 }
                 allCourses = await response.json();
+                console.log("Courses loaded:", allCourses.length);
 
                 allCourses.forEach(course => {
                     if (course.interests && Array.isArray(course.interests)) {
@@ -999,8 +1016,9 @@
                 compileUniqueSearchableTerms();
                 filteredCourses = [...allCourses]; 
                 
+                // Set language first, which will trigger UI updates and filtering
                 setLanguage('et'); 
-                setupEventListeners(); 
+                setupEventListeners(); // Setup listeners after initial data load and language set
 
             } catch (error) {
                 console.error("Could not load or initialize courses:", error);
@@ -1009,9 +1027,9 @@
                 } else {
                     alert(`Viga kursuste laadimisel (${error.message}). Palun kontrolli, et fail "courses.json" on olemas ja proovi hiljem uuesti.`);
                 }
-                if (searchResultCountDOM) searchResultCountDOM.textContent = ""; // Clear result count on error
             } finally {
                  if (loadingIndicatorDOM) loadingIndicatorDOM.classList.add('hidden');
+                 console.log("App initialization finished.");
             }
         }
 
