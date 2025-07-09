@@ -115,10 +115,7 @@
             <button id="languageToggle" class="p-2 bg-tt-magenta hover:bg-opacity-80 rounded" aria-label="Switch language"><i class="fas fa-globe"></i> <span id="langIndicator">EN</span></button>
         </div>
     </header>
-    
-    <!-- ADD THIS DEBUG BUTTON RIGHT HERE
-    <button onclick="printDebugInfo()" style="position:fixed; top:80px; left:10px; z-index:9999; background:red; color:white; padding:10px; border:2px solid black;">Print Debug Info</button>
-
+    <!-- <button onclick="printDebugInfo()" style="position:fixed; top:80px; left:10px; z-index:9999; background:red; color:white; padding:10px; border:2px solid black;">Print State</button>
     <div class="container mx-auto p-4 my-4 bg-gray-50 bg-opacity-90 rounded shadow">  -->
 
     <div class="container mx-auto p-4 my-4 bg-gray-50 bg-opacity-90 rounded shadow">
@@ -152,7 +149,7 @@
             <div><label for="schoolFilter" id="schoolFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Teaduskond</label><select id="schoolFilter" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm text-sm"></select></div>
             <div><label for="instituteFilter" id="instituteFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Instituut</label><select id="instituteFilter" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm text-sm" disabled></select></div>
             <div class="searchable-dropdown"><label for="groupFilterInput" id="groupFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Rühm</label><input type="search" id="groupFilterInput" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm text-sm"><div id="groupFilterList" class="searchable-dropdown-list hidden"></div></div>
-            <div class="searchable-dropdown"><label for="instructorFilterInput" id="instructorFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Õppejõud</label><input type="search" id="instructorFilterInput" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm text-sm" disabled><div id="instructorFilterList" class="searchable-dropdown-list hidden"></div></div>
+            <div class="searchable-dropdown"><label for="instructorFilterInput" id="instructorFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Õppejõud</label><input type="search" id="instructorFilterInput" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm text-sm"><div id="instructorFilterList" class="searchable-dropdown-list hidden"></div></div>
             <div><label for="assessmentFormFilter" id="assessmentFormFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Hindamisvorm</label><select id="assessmentFormFilter" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm text-sm"></select></div>
             <div>
                 <label id="eapFilterLabel" class="block text-sm font-medium tt-dark-blue headline mb-1">EAP</label>
@@ -195,9 +192,8 @@
     
     <div id="customTooltip"></div>
 
-        <script>
+    <script>
         // --- DOM Elements ---
-        
         const searchInputDOM = document.getElementById('searchInput');
         const searchFieldSelectorDOM = document.getElementById('searchFieldSelector');
         const courseListContainerDOM = document.getElementById('courseList');
@@ -216,36 +212,10 @@
         const customTooltipDOM = document.getElementById('customTooltip');
         const eapFilterRadiosDOM = document.querySelectorAll('input[name="eapFilter"]');
         const languageFilterRadiosDOM = document.querySelectorAll('input[name="languageFilter"]');
-        // --- ADD THIS DEBUG FUNCTION HERE ---
-        // function printDebugInfo() {
-        //     console.log("--- DEBUG INFO ---");
-        //     console.log("`allSchoolNames` Map contents:");
-        //     console.log(allSchoolNames);
-            
-        //     console.log("\n`facultyToGroupsMap` Map contents:");
-        //     console.log(facultyToGroupsMap);
-
-        //     console.log("\nCurrently selected `activeFilters.school`:", `"${activeFilters.school}"`);
-
-        //     if (activeFilters.school) {
-        //         const schoolCode = activeFilters.school;
-        //         const schoolNameObject = allSchoolNames.get(schoolCode);
-        //         console.log("\nLookup `allSchoolNames.get(", schoolCode, ")`:", schoolNameObject);
-
-        //         const facultyNameEstonian = (schoolNameObject || {}).et || '';
-        //         console.log("Derived Estonian Name for lookup:", `"${facultyNameEstonian}"`);
-
-        //         const groups = facultyToGroupsMap.get(facultyNameEstonian);
-        //         console.log("Lookup `facultyToGroupsMap.get(", facultyNameEstonian, ")`:", groups);
-        //     }
-        //     console.log("------------------");
-        // }
-        // --- END DEBUG FUNCTION ---
 
         // --- State & Constants ---
         let allCourses = [], fullTimetableData = null, filteredCourses = [], currentLanguage = 'et', isCalendarViewVisible = false;
         const SEMESTER_START = new Date('2025-09-01T00:00:00'), SEMESTER_END = new Date('2026-01-31T23:59:59');
-        // **NEW:** Added cutoff date for study week display
         const STUDY_WEEK_CUTOFF = new Date('2025-12-21T23:59:59');
         let calendarDate = new Date(SEMESTER_START);
         
@@ -253,9 +223,7 @@
         
         // --- Data Sources ---
         const DATA_URL_COURSES = 'courses_new.json';
-        // const DATA_URL_TIMETABLE = 'all_daily_timetable.json'; // Lazy-loaded from the same directory 
-        const DATA_URL_TIMETABLE = "https://drive.google.com/uc?export=download&id=1Vji4hrgvmDlBf-dm1ozgRb7sPgmqwi8V"  // Direct link to the timetable JSON file on Google Drive
-        // https://drive.google.com/file/d/1Vji4hrgvmDlBf-dm1ozgRb7sPgmqwi8V/view?usp=sharing
+        const DATA_URL_TIMETABLE = 'all_daily_timetable.json'; // Lazy-loaded
         const DATA_URL_COURSE_GROUP_MAP = 'course_to_groups_map.json';
         const DATA_URL_GROUP_FACULTY_MAP = 'tpg2teaduskond_map.json';
 
@@ -321,9 +289,8 @@
         const timeToMinutes = (timeStr) => { if (!timeStr?.includes(':')) return 0; const [h, m] = timeStr.split(':').map(Number); return h * 60 + m; };
         const parseDate = (dateStr) => { const [d, m, y] = dateStr.split('.'); return new Date(y, m - 1, d); };
         
-        // **FIX:** Added cutoff date logic
         const getStudyWeek = (currentDate) => {
-            if (currentDate > STUDY_WEEK_CUTOFF) return null; // Stop showing after the cutoff date
+            if (currentDate > STUDY_WEEK_CUTOFF) return null;
             const semesterStartMonday = new Date(SEMESTER_START);
             semesterStartMonday.setDate(semesterStartMonday.getDate() - (semesterStartMonday.getDay() + 6) % 7);
             semesterStartMonday.setHours(0,0,0,0);
@@ -334,23 +301,19 @@
             const diffTime = Math.abs(currentMonday - semesterStartMonday);
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             const weekNumber = Math.floor(diffDays / 7) + 1;
-            return weekNumber <= 16 ? weekNumber : null; // Only show up to week 16
+            return weekNumber <= 16 ? weekNumber : null;
         };
         
         // --- Data Processing Functions ---
         function processInitialData(courseData, courseToGroupMap, groupToFacultyData) {
             groupToFacultyNameMap.clear();
             facultyToGroupsMap.clear();
-            // CORRECTED LOGIC
             groupToFacultyData.forEach(mapEntry => {
                 const group = mapEntry.tpg;
                 const facultyName = mapEntry.teaduskond;
                 if(group && facultyName) {
                     groupToFacultyNameMap.set(group, facultyName);
-                    
-                    // **FIX:** Normalize the key to be uppercase and without spaces
                     const normalizedKey = facultyName.toUpperCase().replace(/\s+/g, '');
-                    
                     if (!facultyToGroupsMap.has(normalizedKey)) {
                         facultyToGroupsMap.set(normalizedKey, new Set());
                     }
@@ -436,7 +399,8 @@
                 
                 if (activeFilters.school) {
                     const facultyNameET = (allSchoolNames.get(activeFilters.school) || {}).et || '';
-                    const groupsOfFaculty = facultyToGroupsMap.get(facultyNameET) || new Set();
+                    const normalizedKey = facultyNameET.toUpperCase().replace(/\s+/g, '');
+                    const groupsOfFaculty = facultyToGroupsMap.get(normalizedKey) || new Set();
                     const isOwnedByFaculty = course.school_code === activeFilters.school;
                     const isTakenByFacultyGroup = [...course.associatedGroups].some(group => groupsOfFaculty.has(group));
                     if (!isOwnedByFaculty && !isTakenByFacultyGroup) return false;
@@ -712,9 +676,8 @@
         }
         
         function updateDependentFilters() {
-            // **FIX:** Ensure school code is re-read from the DOM to be in sync.
             const schoolCode = schoolFilterDOM.value;
-            activeFilters.school = schoolCode; // Keep state in sync
+            activeFilters.school = schoolCode;
 
             const instituteName = activeFilters.institute;
 
@@ -734,12 +697,9 @@
             let relevantGroups = [];
             if (schoolCode) {
                 const facultyNameEstonian = (allSchoolNames.get(schoolCode) || {}).et || '';
-                
-                // **FIX:** Use the same normalization for the lookup key
                 const normalizedKey = facultyNameEstonian.toUpperCase().replace(/\s+/g, '');
-                
                 relevantGroups = [...(facultyToGroupsMap.get(normalizedKey) || [])].sort();
-            } else {    
+            } else {
                 relevantGroups = allUniqueGroups;
             }
             setupSearchableDropdown('groupFilterInput', 'groupFilterList', relevantGroups, value => {
@@ -907,6 +867,6 @@
         }
         
         document.addEventListener('DOMContentLoaded', initializeApp);
-    </script> 
+    </script>
 </body>
 </html>
