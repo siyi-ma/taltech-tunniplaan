@@ -115,22 +115,21 @@
             <button id="languageToggle" class="p-2 bg-tt-magenta hover:bg-opacity-80 rounded" aria-label="Switch language"><i class="fas fa-globe"></i> <span id="langIndicator">EN</span></button>
         </div>
     </header>
-    <!-- <button onclick="printDebugInfo()" style="position:fixed; top:80px; left:10px; z-index:9999; background:red; color:white; padding:10px; border:2px solid black;">Print State</button>
-    <div class="container mx-auto p-4 my-4 bg-gray-50 bg-opacity-90 rounded shadow">  -->
 
     <div class="container mx-auto p-4 my-4 bg-gray-50 bg-opacity-90 rounded shadow">
         <div class="flex flex-col md:flex-row md:items-end gap-4">
             <div class="flex-grow relative md:w-3/5">
-                <label for="searchInput" id="searchInputLabel" class="block text-sm font-medium text-gray-700 mb-1">Otsisõna</label>
-                <input type="search" id="searchInput" class="p-2 border border-gray-300 bg-white rounded-md w-full body-text" placeholder="Sisesta otsisõna...">
+                <label for="searchInput" id="searchInputLabel" class="block text-sm font-medium text-gray-700 mb-1">Otsisõna (eralda komaga)</label>
+                <input type="search" id="searchInput" class="p-2 border border-gray-300 bg-white rounded-md w-full body-text" placeholder="Sisesta otsisõna või -sõnad...">
             </div>
             <div class="md:w-1/5">
                 <label for="searchFieldSelector" id="searchFieldSelectorLabel" class="block text-sm font-medium text-gray-700 mb-1">Otsi väljal</label>
                 <select id="searchFieldSelector" class="p-2 border border-gray-300 bg-white rounded-md w-full text-sm h-[2.625rem]"> 
                     <option value="all">Kõik väljad</option>
                     <option value="title">Aine nimetus</option>
-                    <option value="course_id">Kursuse kood</option>
-                    <option value="keyword">Märksõna/Õppejõud</option>
+                    <option value="course_id">Ainekood</option>
+                    <option value="keyword">Märksõna</option>
+                    <option value="instructor">Õppejõud</option>
                 </select>
             </div>
             <div class="flex gap-2 mt-2 md:mt-0">
@@ -140,7 +139,7 @@
         </div>
     </div>
 
-    <aside id="filterPanel" class="bg-gray-50 p-4 shadow-lg fixed inset-y-0 left-0 transform -translate-x-full z-40 w-4/5 sm:w-2/5 md:w-1/3 lg:w-1/4 xl:w-1/5 overflow-y-auto mt-16 max-h-[calc(100%-4rem)] transition-transform duration-300 ease-in-out rounded-r-lg">
+    <aside id="filterPanel" class="bg-gray-50 p-4 shadow-lg fixed inset-y-0 left-0 transform -translate-x-full z-40 w-4/5 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 overflow-y-auto mt-16 max-h-[calc(100%-4rem)] transition-transform duration-300 ease-in-out rounded-r-lg">
         <div class="flex justify-between items-center mb-4">
             <h2 id="filtersTitle" class="text-xl headline tt-dark-blue">Filtrid</h2>
             <button id="closeFilterButton" class="text-tt-magenta hover:text-tt-dark-blue"><i class="fas fa-times fa-lg"></i></button>
@@ -149,7 +148,6 @@
             <div><label for="schoolFilter" id="schoolFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Teaduskond</label><select id="schoolFilter" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm text-sm"></select></div>
             <div><label for="instituteFilter" id="instituteFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Instituut</label><select id="instituteFilter" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm text-sm" disabled></select></div>
             <div class="searchable-dropdown"><label for="groupFilterInput" id="groupFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Rühm</label><input type="search" id="groupFilterInput" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm text-sm"><div id="groupFilterList" class="searchable-dropdown-list hidden"></div></div>
-            <div class="searchable-dropdown"><label for="instructorFilterInput" id="instructorFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Õppejõud</label><input type="search" id="instructorFilterInput" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm text-sm"><div id="instructorFilterList" class="searchable-dropdown-list hidden"></div></div>
             <div><label for="assessmentFormFilter" id="assessmentFormFilterLabel" class="block text-sm font-medium tt-dark-blue headline">Hindamisvorm</label><select id="assessmentFormFilter" class="mt-1 block w-full p-2 border-tt-grey-1 rounded-md shadow-sm text-sm"></select></div>
             <div>
                 <label id="eapFilterLabel" class="block text-sm font-medium tt-dark-blue headline mb-1">EAP</label>
@@ -208,18 +206,18 @@
         const viewToggleButtonContainerDOM = document.getElementById('viewToggleButtonContainer');
         const scrollTopBtnDOM = document.getElementById('scrollTopBtn');
         const groupFilterInput = document.getElementById('groupFilterInput');
-        const instructorFilterInput = document.getElementById('instructorFilterInput');
         const customTooltipDOM = document.getElementById('customTooltip');
         const eapFilterRadiosDOM = document.querySelectorAll('input[name="eapFilter"]');
         const languageFilterRadiosDOM = document.querySelectorAll('input[name="languageFilter"]');
 
         // --- State & Constants ---
-        let allCourses = [], fullTimetableData = null, filteredCourses = [], currentLanguage = 'et', isCalendarViewVisible = false;
+        let allCourses = [], fullTimetableData = null, filteredCourses = [], currentLanguage = 'et', isCalendarViewVisible = false, totalFilteredSessions = 0;
         const SEMESTER_START = new Date('2025-09-01T00:00:00'), SEMESTER_END = new Date('2026-01-31T23:59:59');
         const STUDY_WEEK_CUTOFF = new Date('2025-12-21T23:59:59');
+        const CALENDAR_SESSION_LIMIT = 1000;
         let calendarDate = new Date(SEMESTER_START);
         
-        let sessionDataCache = null, activeFilters = { searchTerm: '', searchFieldType: 'all', school: '', institute: '', eap: '', assessmentForm: '', teachingLanguage: '', instructor: '', group: '' };
+        let sessionDataCache = null, activeFilters = { searchTerm: '', searchFieldType: 'all', school: '', institute: '', eap: '', assessmentForm: '', teachingLanguage: '', group: '' };
         
         // --- Data Sources ---
         const DATA_URL_COURSES = 'courses_new.json';
@@ -228,22 +226,23 @@
         const DATA_URL_GROUP_FACULTY_MAP = 'tpg2teaduskond_map.json';
 
         // In-memory maps for fast lookups
-        let schoolToInstitutes = new Map(), schoolToInstructors = new Map(), instituteToInstructors = new Map();
+        let schoolToInstitutes = new Map();
         let facultyToGroupsMap = new Map(), groupToFacultyNameMap = new Map();
-        let allUniqueInstructors = [], allUniqueGroups = [], allSchoolNames = new Map();
+        let allUniqueGroups = [], allSchoolNames = new Map();
 
         // Calendar constants
         const HOUR_HEIGHT_PX = 60, START_HOUR = 8, END_HOUR = 22;
 
         const uiTexts = {
             pageTitle: { et: 'TalTech kursused sügis 2025', en: 'TalTech Courses Autumn 2025' },
-            searchInputLabel: { et: 'Otsisõna', en: 'Search term' },
-            searchPlaceholder: { et: 'Sisesta otsisõna...', en: 'Insert search word...' },
+            searchInputLabel: { et: 'Otsisõna (eralda komaga)', en: 'Search term (separate by comma)' },
+            searchPlaceholder: { et: 'Sisesta otsisõna või -sõnad...', en: 'Enter search term(s)...' },
             searchFieldSelectorLabel: { et: 'Otsi väljal', en: 'Search in field' },
             searchField_all: { et: 'Kõik väljad', en: 'All fields' },
             searchField_title: { et: 'Aine nimetus', en: 'Course name' },
-            searchField_course_id: { et: 'Kursuse kood', en: 'Course code' },
-            searchField_keyword: { et: 'Märksõna/Õppejõud', en: 'Keyword/Instructor' },
+            searchField_course_id: { et: 'Ainekood', en: 'Course Code' },
+            searchField_keyword: { et: 'Märksõna', en: 'Keyword' },
+            searchField_instructor: { et: 'Õppejõud', en: 'Instructor' },
             searchButtonText: { et: 'Otsi', en: 'Search' },
             resetSearchButtonText: { et: 'Lähtesta', en: 'Reset' },
             activeFiltersHeader: { et: 'Valitud filtrid:', en: 'Selected filters:'},
@@ -253,7 +252,6 @@
             allSchools: { et: 'Kõik teaduskonnad', en: 'All Faculties' },
             instituteFilterLabel: { et: 'Instituut', en: 'Institute' },
             allInstitutes: { et: 'Kõik instituudid', en: 'All Institutes' },
-            instructorFilterLabel: { et: 'Õppejõud', en: 'Instructor' },
             groupFilterLabel: { et: 'Rühm', en: 'Group' },
             assessmentFormFilterLabel: { et: 'Hindamisvorm', en: 'Assessment Form' },
             allAssessmentForms: { et: 'Kõik vormid', en: 'All Forms' },
@@ -265,10 +263,11 @@
             langAllLabel: { et: 'Kõik', en: 'All' },
             langEtLabel: { et: 'Eesti keel', en: 'Estonian' },
             langEnLabel: { et: 'Inglise keel', en: 'English' },
-            noCoursesFound: { et: 'Vastavaid kursuseid ei leitud.', en: 'No matching courses found.' },
-            resultsFoundCourses: { et: 'Leitud kursust', en: 'courses found' },
+            noCoursesFound: { et: 'Vastavaid aineid ei leitud.', en: 'No matching courses found.' },
+            resultsFound: { et: (n) => `Leitud ${n} ainet`, en: (n) => `Found ${n} courses` },
+            calendarLimitExceeded: { et: (n) => `Leitud ${n} sessiooni. Kalendrivaate kuvamiseks (max ${CALENDAR_SESSION_LIMIT}) kitsenda valikut.`, en: (n) => `Found ${n} sessions. Please narrow your search to display the calendar view (max ${CALENDAR_SESSION_LIMIT}).` },
             showCalendarView: { et: 'Kalendrivaade', en: 'Calendar View' },
-            backToCourses: { et: 'Tagasi kursuste juurde', en: 'Back to Courses' },
+            backToCourses: { et: 'Tagasi ainete juurde', en: 'Back to Courses' },
             noSessionsThisPeriod: { et: 'Sellel nädalal sessioone ei toimu.', en: 'No sessions this week.' },
             showMore: { et: 'Näita rohkem', en: 'Show more' },
             showLess: { et: 'Näita vähem', en: 'Show less' },
@@ -288,6 +287,10 @@
         const debounce = (func, delay) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => func.apply(this, a), delay); }; };
         const timeToMinutes = (timeStr) => { if (!timeStr?.includes(':')) return 0; const [h, m] = timeStr.split(':').map(Number); return h * 60 + m; };
         const parseDate = (dateStr) => { const [d, m, y] = dateStr.split('.'); return new Date(y, m - 1, d); };
+        const getCleanInstructorNames = (instructorStr) => {
+            if (!instructorStr) return [];
+            return instructorStr.split('|').map(i => i.split(' (')[0].trim()).filter(Boolean);
+        };
         
         const getStudyWeek = (currentDate) => {
             if (currentDate > STUDY_WEEK_CUTOFF) return null;
@@ -360,24 +363,19 @@
                 course.sessions = sessionsByCourse.get(course.id) || [];
                 course.uniqueInstructors.clear();
                 course.sessions.forEach(session => {
-                    session.oppejoud.split('|').forEach(i => i && course.uniqueInstructors.add(i));
+                    getCleanInstructorNames(session.oppejoud).forEach(cleanName => {
+                        course.uniqueInstructors.add(cleanName);
+                    });
                 });
             });
 
-            schoolToInstructors.clear(); instituteToInstructors.clear(); schoolToInstitutes.clear();
+            schoolToInstitutes.clear();
             allCourses.forEach(course => {
                 if (course.school_code) {
                     if (!schoolToInstitutes.has(course.school_code)) schoolToInstitutes.set(course.school_code, new Set());
                     if (course.institute_name) schoolToInstitutes.get(course.school_code).add(course.institute_name);
-                    if (!schoolToInstructors.has(course.school_code)) schoolToInstructors.set(course.school_code, new Set());
-                    course.uniqueInstructors.forEach(i => schoolToInstructors.get(course.school_code).add(i));
-                }
-                if (course.institute_name) {
-                    if (!instituteToInstructors.has(course.institute_name)) instituteToInstructors.set(course.institute_name, new Set());
-                    course.uniqueInstructors.forEach(i => instituteToInstructors.get(course.institute_name).add(i));
                 }
             });
-            allUniqueInstructors = [...new Set(allCourses.flatMap(c => Array.from(c.uniqueInstructors)))].sort();
         }
         
         // --- Filtering and Rendering Logic ---
@@ -385,16 +383,28 @@
             if (resetView) { isCalendarViewVisible = false; calendarDate = new Date(SEMESTER_START); }
             
             filteredCourses = allCourses.filter(course => {
-                const term = activeFilters.searchTerm.toLowerCase();
-                if (term) {
-                    const searchField = activeFilters.searchFieldType;
-                    const instructorsStr = Array.from(course.uniqueInstructors).join(' ').toLowerCase();
-                    let searchString = '';
-                    if (searchField === 'all') searchString = `${course.id||''} ${course.name_et||''} ${course.name_en||''} ${(course.keywords_et||[]).join(' ')} ${instructorsStr}`.toLowerCase();
-                    else if (searchField === 'title') searchString = `${course.name_et||''} ${course.name_en||''}`.toLowerCase();
-                    else if (searchField === 'course_id') searchString = `${course.id||''}`.toLowerCase();
-                    else if (searchField === 'keyword') searchString = `${(course.keywords_et||[]).join(' ')} ${instructorsStr}`.toLowerCase();
-                    if (!searchString.includes(term)) return false;
+                const rawSearchTerm = activeFilters.searchTerm.toLowerCase();
+                if (rawSearchTerm) {
+                    const searchTerms = rawSearchTerm.split(',').map(t => t.trim()).filter(t => t.length > 0);
+                    if (searchTerms.length > 0) {
+                        const searchField = activeFilters.searchFieldType;
+                        const instructorsStr = Array.from(course.uniqueInstructors).join(' ').toLowerCase();
+                        const keywordsStr = (course.keywords_et || []).join(' ').toLowerCase();
+                        const titleStr = `${course.name_et||''} ${course.name_en||''}`.toLowerCase();
+                        const courseIdStr = `${course.id||''}`.toLowerCase();
+                        
+                        let targetString;
+                        switch (searchField) {
+                            case 'title': targetString = titleStr; break;
+                            case 'course_id': targetString = courseIdStr; break;
+                            case 'keyword': targetString = keywordsStr; break;
+                            case 'instructor': targetString = instructorsStr; break;
+                            default: targetString = `${courseIdStr} ${titleStr} ${keywordsStr} ${instructorsStr}`; break;
+                        }
+                        
+                        const matchFound = searchTerms.some(term => targetString.includes(term));
+                        if (!matchFound) return false;
+                    }
                 }
                 
                 if (activeFilters.school) {
@@ -410,11 +420,13 @@
                 if (activeFilters.eap && course.eap != activeFilters.eap) return false;
                 if (activeFilters.assessmentForm && (course.assessment_form_et !== activeFilters.assessmentForm && (course.assessment_form_en || course.assessment_form_et) !== activeFilters.assessmentForm)) return false;
                 if (activeFilters.teachingLanguage && course[`keel_${activeFilters.teachingLanguage}`] !== "1") return false;
-                if (activeFilters.instructor && !course.uniqueInstructors.has(activeFilters.instructor)) return false;
                 if (activeFilters.group && !course.associatedGroups.has(activeFilters.group)) return false;
                 
                 return true;
             });
+            
+            totalFilteredSessions = fullTimetableData ? filteredCourses.reduce((sum, course) => sum + course.sessions.length, 0) : 0;
+
             render();
         }
         
@@ -441,13 +453,64 @@
             if (course.keel_et === "1" && course.keel_en === "1") langTag = 'ET+EN';
             else if (course.keel_et === "1") langTag = 'ET'; else if (course.keel_en === "1") langTag = 'EN';
             const timetableLinkHTML = course.timetable_link ? `<a href="${course.timetable_link}" target="_blank" rel="noopener noreferrer" class="text-tt-magenta hover:underline text-sm font-normal"><i class="fas fa-calendar-alt fa-fw"></i> Tunniplaan</a>` : '';
-            return `<div class="bg-white rounded-lg shadow-md border border-tt-grey-1 overflow-hidden flex flex-col h-full"><div class="p-4 flex-grow"><div class="flex justify-between items-start mb-1"><h2 class="text-lg proxima-nova-bold uppercase flex-grow pr-2"><a href="${course.course_card_link || '#'}" target="_blank" class="text-tt-magenta hover:underline">${course.id || ''} - ${name}</a></h2><div class="text-right flex-shrink-0">${timetableLinkHTML}</div></div> ${instructors ? `<p class="text-sm text-gray-600 mb-2"><i class="fas fa-chalkboard-teacher fa-fw text-gray-400"></i> ${instructors}</p>` : ''} ${nameOtherLang && name.toLowerCase() !== nameOtherLang.toLowerCase() ? `<h3 class="text-md tt-grey-1 mb-2">${nameOtherLang}</h3>` : '<div class="mb-1"></div>'}<div class="mb-3 flex flex-wrap gap-2 items-center text-xs font-semibold">${course.school_code ? `<span class="bg-gray-200 text-gray-700 px-2 py-0.5 rounded">${currentLanguage === 'et' ? course.school_name : (course.school_name_en || course.school_name)}</span>` : ''} ${langTag ? `<span class="bg-tt-light-blue text-white px-2 py-0.5 rounded">${langTag}</span>` : ''} <span class="bg-gray-200 text-tt-dark-blue px-2 py-0.5 rounded">${course.eap} EAP</span></div><p class="course-description text-sm text-gray-700 mb-3 body-text max-h-20 overflow-hidden">${description || ''}</p></div><div class="px-4 pb-4 mt-auto"><button class="expand-button text-tt-magenta hover:text-tt-dark-blue text-sm proxima-nova-bold" aria-expanded="false" aria-controls="details-${course.id}"><i class="fas fa-plus" data-show="fa-plus" data-hide="fa-minus"></i> <span class="ml-1">${uiTexts.showMore[currentLanguage]}</span></button></div><div id="details-${course.id}" class="expandable-content hidden p-4 border-t border-tt-grey-1 bg-gray-50 text-sm"><p><strong>${uiTexts.assessment[currentLanguage]}:</strong> ${currentLanguage === 'et' ? course.assessment_form_et : (course.assessment_form_en || course.assessment_form_et) || 'N/A'}</p><h4 class="font-semibold tt-dark-blue mt-2 mb-1 headline">${uiTexts.objectives[currentLanguage]}</h4><ul class="list-disc list-inside body-text">${(currentLanguage === 'et' ? course.objectives_et : (course.objectives_en || course.objectives_et) || '').split('\n').map(li => `<li>${li.replace(/^- /, '')}</li>`).join('')}</ul></div></div>`;
+            return `<div class="bg-white rounded-lg shadow-md border border-tt-grey-1 overflow-hidden flex flex-col h-full">
+                        <div class="p-4 flex-grow">
+                            <div class="flex justify-between items-start mb-1">
+                                <h2 class="text-lg proxima-nova-bold uppercase flex-grow pr-2"><a href="${course.course_card_link || '#'}" target="_blank" class="text-tt-magenta hover:underline">${course.id || ''} - ${name}</a></h2>
+                                <div class="text-right flex-shrink-0">${timetableLinkHTML}</div>
+                            </div>
+                            ${nameOtherLang && name.toLowerCase() !== nameOtherLang.toLowerCase() ? `<h3 class="text-md text-gray-700 font-semibold mb-2">${nameOtherLang}</h3>` : ''}
+                            ${instructors ? `<p class="text-sm text-gray-600 mb-2"><i class="fas fa-chalkboard-teacher fa-fw text-gray-400"></i> ${instructors}</p>` : ''}
+                            <div class="mb-3 flex flex-wrap gap-2 items-center text-xs font-semibold">
+                                ${course.school_code ? `<span class="bg-gray-200 text-gray-700 px-2 py-0.5 rounded">${currentLanguage === 'et' ? course.school_name : (course.school_name_en || course.school_name)}</span>` : ''}
+                                ${langTag ? `<span class="bg-tt-light-blue text-white px-2 py-0.5 rounded">${langTag}</span>` : ''}
+                                <span class="bg-gray-200 text-tt-dark-blue px-2 py-0.5 rounded">${course.eap} EAP</span>
+                            </div>
+                            <p class="course-description text-sm text-gray-700 mb-3 body-text max-h-20 overflow-hidden">${description || ''}</p>
+                        </div>
+                        <div class="px-4 pb-4 mt-auto">
+                            <button class="expand-button text-tt-magenta hover:text-tt-dark-blue text-sm proxima-nova-bold" aria-expanded="false" aria-controls="details-${course.id}"><i class="fas fa-plus" data-show="fa-plus" data-hide="fa-minus"></i> <span class="ml-1">${uiTexts.showMore[currentLanguage]}</span></button>
+                        </div>
+                        <div id="details-${course.id}" class="expandable-content hidden p-4 border-t border-tt-grey-1 bg-gray-50 text-sm">
+                            <p><strong>${uiTexts.assessment[currentLanguage]}:</strong> ${currentLanguage === 'et' ? course.assessment_form_et : (course.assessment_form_en || course.assessment_form_et) || 'N/A'}</p>
+                            <h4 class="font-semibold tt-dark-blue mt-2 mb-1 headline">${uiTexts.objectives[currentLanguage]}</h4>
+                            <ul class="list-disc list-inside body-text">${(currentLanguage === 'et' ? course.objectives_et : (course.objectives_en || course.objectives_et) || '').split('\n').map(li => `<li>${li.replace(/^- /, '')}</li>`).join('')}</ul>
+                        </div>
+                    </div>`;
         }
         
         function renderCardView(courses) {
-            resultsCounterDOM.textContent = `${courses.length} ${uiTexts.resultsFoundCourses[currentLanguage]}`;
+            resultsCounterDOM.textContent = uiTexts.resultsFound[currentLanguage](courses.length);
             courseListContainerDOM.innerHTML = courses.length === 0 ? `<p class="text-center text-tt-grey-1 col-span-full">${uiTexts.noCoursesFound[currentLanguage]}</p>` : courses.map(createCourseCardHTML).join('');
-            document.querySelectorAll('.expand-button').forEach(button=>{if(button.dataset.listener)return;button.addEventListener('click',()=>{const content=button.closest('.flex-col').querySelector('.expandable-content');const desc=content.previousElementSibling.querySelector('.course-description');const icon=button.querySelector('i');const span=button.querySelector('span');const isHidden=content.classList.contains('hidden');content.classList.toggle('hidden');desc.classList.toggle('max-h-20',!isHidden);button.setAttribute('aria-expanded',isHidden);if(isHidden){icon.className=`fas fa-minus`;span.textContent=` ${uiTexts.showLess[currentLanguage]}`;button.classList.add('font-bold');}else{icon.className=`fas fa-plus`;span.textContent=` ${uiTexts.showMore[currentLanguage]}`;button.classList.remove('font-bold');}});button.dataset.listener='true';});
+            
+            document.querySelectorAll('.expand-button').forEach(button => {
+                if (button.dataset.listener) return;
+                button.addEventListener('click', () => {
+                    const cardRoot = button.closest('.flex-col');
+                    const content = cardRoot.querySelector('.expandable-content');
+                    const desc = cardRoot.querySelector('.course-description');
+                    if (!content || !desc) return; // Safety check
+                    
+                    const icon = button.querySelector('i');
+                    const span = button.querySelector('span');
+                    const isHidden = content.classList.contains('hidden');
+                    
+                    content.classList.toggle('hidden');
+                    desc.classList.toggle('max-h-20', !isHidden);
+                    button.setAttribute('aria-expanded', isHidden);
+                    
+                    if (isHidden) {
+                        icon.className = `fas fa-minus`;
+                        span.textContent = ` ${uiTexts.showLess[currentLanguage]}`;
+                        button.classList.add('font-bold');
+                    } else {
+                        icon.className = `fas fa-plus`;
+                        span.textContent = ` ${uiTexts.showMore[currentLanguage]}`;
+                        button.classList.remove('font-bold');
+                    }
+                });
+                button.dataset.listener = 'true';
+            });
         }
         
         async function toggleCalendarView() {
@@ -460,7 +523,7 @@
                     if (!response.ok) throw new Error("Could not fetch timetable data.");
                     fullTimetableData = await response.json();
                     mergeTimetableData(fullTimetableData);
-                    populateFilterOptions();
+                    totalFilteredSessions = filteredCourses.reduce((sum, course) => sum + course.sessions.length, 0);
                 } catch(error) {
                     console.error("Failed to load timetable:", error);
                     weeklyViewDOM.innerHTML = `<p class="text-center text-red-500 p-8">Failed to load calendar data.</p>`;
@@ -470,6 +533,7 @@
                     loadingIndicatorDOM.classList.add('hidden');
                 }
             }
+            if (totalFilteredSessions > CALENDAR_SESSION_LIMIT) return;
             isCalendarViewVisible = true;
             calendarDate = new Date(SEMESTER_START);
             applyAllFiltersAndRender(false);
@@ -483,8 +547,16 @@
                     isCalendarViewVisible = false;
                     render();
                 });
+            } else if (fullTimetableData && totalFilteredSessions > CALENDAR_SESSION_LIMIT) {
+                viewToggleButtonContainerDOM.innerHTML = `
+                    <div class="flex flex-col items-end">
+                        <button class="px-3 py-1 rounded text-sm font-medium bg-gray-400 text-white cursor-not-allowed" disabled><i class="fas fa-calendar-week mr-1"></i> ${uiTexts.showCalendarView[currentLanguage]}</button>
+                        <p class="text-xs text-red-600 mt-1 text-right">${uiTexts.calendarLimitExceeded[currentLanguage](totalFilteredSessions)}</p>
+                    </div>`;
             } else {
-                viewToggleButtonContainerDOM.innerHTML = `<button id="toggleViewBtn" class="px-3 py-1 rounded text-sm font-medium bg-tt-dark-blue text-white hover:bg-tt-dark-blue-hover"><i class="fas fa-calendar-week mr-1"></i> ${uiTexts.showCalendarView[currentLanguage]}</button>`;
+                const buttonClass = fullTimetableData ? 'bg-tt-dark-blue text-white hover:bg-tt-dark-blue-hover' : 'bg-gray-400 text-white cursor-wait';
+                const buttonIcon = fullTimetableData ? 'fa-calendar-week' : 'fa-spinner fa-spin';
+                viewToggleButtonContainerDOM.innerHTML = `<button id="toggleViewBtn" class="px-3 py-1 rounded text-sm font-medium ${buttonClass}"><i class="fas ${buttonIcon} mr-1"></i> ${uiTexts.showCalendarView[currentLanguage]}</button>`;
                 viewToggleButtonContainerDOM.querySelector('#toggleViewBtn').addEventListener('click', toggleCalendarView);
             }
         }
@@ -562,7 +634,7 @@
                     courseData.sessions.forEach(s => {
                         const type = s.tyyp || 'N/A';
                         if (!sessionGroups.has(type)) sessionGroups.set(type, new Set());
-                        s.oppejoud.split('|').forEach(i => i && sessionGroups.get(type).add(i.trim()));
+                        getCleanInstructorNames(s.oppejoud).forEach(name => sessionGroups.get(type).add(name));
                     });
                     sessionGroups.forEach((instructors, type) => {
                          veebiopeHTML += `<div class="bg-white p-3 rounded border-l-4 border-tt-dark-blue shadow-sm" style="min-width: 180px;"><p class="font-bold text-tt-dark-blue truncate">${courseData.courseName}</p><p class="text-sm mt-1">${type}</p><p class="text-sm text-gray-600">${[...instructors].join(', ')}</p></div>`;
@@ -629,11 +701,16 @@
                         }
                         const mandatoryGroups = [], electiveGroups = [];
                         if(session.ryhmadInfo) session.ryhmadInfo.forEach((status, group) => { if (status === 'kohustuslik') mandatoryGroups.push(group); else if (status === 'valikuline') electiveGroups.push(group); });
-                        let tooltipHTML = `<div class="tooltip-title">${session.aine}</div><div>${session.oppejoud.split('|').join(', ') || 'N/A'}</div><div class="text-gray-300">${session.tyyp}</div><div class="text-gray-300">${session.start} - ${session.end} @ ${session.ruum || 'N/A'}</div>`;
+                        
+                        const fullInstructorsForTooltip = session.oppejoud.split('|').join(', ');
+                        const cleanInstructorsForDisplay = getCleanInstructorNames(session.oppejoud).join(', ');
+
+                        let tooltipHTML = `<div class="tooltip-title">${session.aine}</div><div>${fullInstructorsForTooltip || 'N/A'}</div><div class="text-gray-300">${session.tyyp}</div><div class="text-gray-300">${session.start} - ${session.end} @ ${session.ruum || 'N/A'}</div>`;
                         if (mandatoryGroups.length > 0) tooltipHTML += `<div class="tooltip-section-title">${uiTexts.mandatoryForGroups[currentLanguage]}:</div><div>${mandatoryGroups.join(', ')}</div>`;
                         if (electiveGroups.length > 0) tooltipHTML += `<div class="tooltip-section-title">${uiTexts.electiveForGroups[currentLanguage]}:</div><div>${electiveGroups.join(', ')}</div>`;
+                        
                         gridHTML += `<div class="session-card" data-tooltip="${encodeURIComponent(tooltipHTML)}" style="top: ${top}px; height: ${height}px; left: ${left}; width: ${width}; border-left-color: ${borderColor};">
-                            <div class="session-card-content"><div class="course-name truncate">${session.aine}</div><div class="session-details truncate">${session.oppejoud.split('|').join(', ')}</div><div class="session-details">${session.start} - ${session.end}</div><div class="session-details truncate"><i class="fas fa-map-marker-alt fa-fw text-gray-400"></i> ${session.ruum || 'N/A'}</div></div></div>`;
+                            <div class="session-card-content"><div class="course-name truncate">${session.aine}</div><div class="session-details truncate">${cleanInstructorsForDisplay}</div><div class="session-details">${session.start} - ${session.end}</div><div class="session-details truncate"><i class="fas fa-map-marker-alt fa-fw text-gray-400"></i> ${session.ruum || 'N/A'}</div></div></div>`;
                     });
                     gridHTML += `</div>`;
                 }
@@ -679,11 +756,8 @@
             const schoolCode = schoolFilterDOM.value;
             activeFilters.school = schoolCode;
 
-            const instituteName = activeFilters.institute;
-
             instituteFilterDOM.disabled = !fullTimetableData;
-            instructorFilterInput.disabled = !fullTimetableData;
-
+            
             if (instituteFilterDOM.disabled) {
                 instituteFilterDOM.innerHTML = `<option>${uiTexts.allInstitutes[currentLanguage]}</option>`;
             } else {
@@ -705,18 +779,6 @@
             setupSearchableDropdown('groupFilterInput', 'groupFilterList', relevantGroups, value => {
                 activeFilters.group = value; applyAllFiltersAndRender(false);
             });
-
-            let relevantInstructors = allUniqueInstructors;
-            if (instituteName) {
-                relevantInstructors = [...(instituteToInstructors.get(instituteName) || [])].sort();
-            } else if (schoolCode && fullTimetableData) {
-                relevantInstructors = [...(schoolToInstructors.get(schoolCode) || [])].sort();
-            }
-            setupSearchableDropdown('instructorFilterInput', 'instructorFilterList', relevantInstructors, value => {
-                activeFilters.instructor = value; applyAllFiltersAndRender(false);
-            });
-            instructorFilterInput.value = activeFilters.instructor || '';
-            instructorFilterInput.placeholder = instructorFilterInput.disabled ? 'Lae kalendrivaade...' : '';
         }
 
         function renderActiveFiltersDisplay() {
@@ -725,7 +787,6 @@
             if(activeFilters.searchTerm) createPill('searchTerm', Array.from(searchFieldSelectorDOM.options).find(o => o.value == activeFilters.searchFieldType)?.textContent || 'Otsing', `"${activeFilters.searchTerm}"`);
             if(activeFilters.school) createPill('school', uiTexts.schoolFilterLabel[currentLanguage], (allSchoolNames.get(activeFilters.school) || {})[currentLanguage] || activeFilters.school);
             if(activeFilters.institute) createPill('institute', uiTexts.instituteFilterLabel[currentLanguage], activeFilters.institute);
-            if(activeFilters.instructor) createPill('instructor', uiTexts.instructorFilterLabel[currentLanguage], activeFilters.instructor);
             if(activeFilters.group) createPill('group', uiTexts.groupFilterLabel[currentLanguage], activeFilters.group);
             if(activeFilters.assessmentForm) createPill('assessmentForm', uiTexts.assessmentFormFilterLabel[currentLanguage], activeFilters.assessmentForm);
             if(activeFilters.eap) createPill('eap', uiTexts.eapFilterLabel[currentLanguage], `${activeFilters.eap} EAP`);
@@ -741,7 +802,7 @@
             activeFilters[type] = '';
             if (type === 'searchTerm') {
                 document.getElementById('searchInput').value = '';
-            } else if (type === 'group' || type === 'instructor') {
+            } else if (type === 'group') {
                 document.getElementById(`${type}FilterInput`).value = '';
             } else if (type === 'eap' || type === 'teachingLanguage') {
                 document.querySelector(`input[name="${type}Filter"][value=""]`).checked = true;
@@ -753,14 +814,8 @@
             if (type === 'school') {
                 activeFilters.institute = '';
                 activeFilters.group = '';
-                activeFilters.instructor = '';
                 if (document.getElementById('instituteFilter')) document.getElementById('instituteFilter').value = '';
                 if (document.getElementById('groupFilterInput')) document.getElementById('groupFilterInput').value = '';
-                if (document.getElementById('instructorFilterInput')) document.getElementById('instructorFilterInput').value = '';
-            }
-            if (type === 'institute' || type === 'group') {
-                activeFilters.instructor = '';
-                if (document.getElementById('instructorFilterInput')) document.getElementById('instructorFilterInput').value = '';
             }
 
             applyAllFiltersAndRender(false);
@@ -769,7 +824,7 @@
 
         function clearAllFilters() { 
             Object.keys(activeFilters).forEach(k => activeFilters[k] = ''); 
-            ['searchInput', 'schoolFilter', 'instituteFilter', 'assessmentFormFilter', 'groupFilterInput', 'instructorFilterInput'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';}); 
+            ['searchInput', 'schoolFilter', 'instituteFilter', 'assessmentFormFilter', 'groupFilterInput'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';}); 
             ['eapFilter','languageFilter'].forEach(name=>document.querySelector(`input[name="${name}"][value=""]`).checked=true);
             searchFieldSelectorDOM.value = 'all'; 
             applyAllFiltersAndRender(false); 
@@ -779,7 +834,7 @@
         function updateAllUITexts() {
             Object.keys(uiTexts).forEach(key => {
                 const el = document.getElementById(key);
-                if (el && typeof uiTexts[key] === 'object' && uiTexts[key][currentLanguage] && typeof uiTexts[key][currentLanguage] === 'string') {
+                if (el && typeof uiTexts[key] === 'object' && uiTexts[key][currentLanguage] && typeof uiTexts[key][currentLanguage] !== 'function') {
                     if (el.tagName === 'INPUT') el.placeholder = uiTexts[key][currentLanguage];
                     else el.textContent = uiTexts[key][currentLanguage];
                 }
@@ -789,6 +844,7 @@
                 searchFieldSelectorDOM.options[1].textContent = uiTexts.searchField_title[currentLanguage];
                 searchFieldSelectorDOM.options[2].textContent = uiTexts.searchField_course_id[currentLanguage];
                 searchFieldSelectorDOM.options[3].textContent = uiTexts.searchField_keyword[currentLanguage];
+                searchFieldSelectorDOM.options[4].textContent = uiTexts.searchField_instructor[currentLanguage];
             }
             if (document.getElementById('langIndicator')) document.getElementById('langIndicator').textContent = currentLanguage === 'et' ? 'EN' : 'ET';
             applyAllFiltersAndRender(false);
@@ -806,15 +862,12 @@
             document.getElementById('searchButton').addEventListener('click', () => { activeFilters.searchTerm = searchInputDOM.value; activeFilters.searchFieldType = searchFieldSelectorDOM.value; applyAllFiltersAndRender(); });
             document.getElementById('resetSearchButton').addEventListener('click', clearAllFilters);
             searchInputDOM.addEventListener('input', debounce(() => { activeFilters.searchTerm = searchInputDOM.value; activeFilters.searchFieldType = searchFieldSelectorDOM.value; applyAllFiltersAndRender(); }, 300));
-            schoolFilterDOM.addEventListener('change', e => { activeFilters.school = e.target.value; activeFilters.institute = ''; activeFilters.group = ''; activeFilters.instructor = ''; applyAllFiltersAndRender(false); updateDependentFilters(); });
-            instituteFilterDOM.addEventListener('change', e => { activeFilters.institute = e.target.value; activeFilters.instructor = ''; applyAllFiltersAndRender(false); updateDependentFilters(); });
+            schoolFilterDOM.addEventListener('change', e => { activeFilters.school = e.target.value; activeFilters.institute = ''; activeFilters.group = ''; applyAllFiltersAndRender(false); updateDependentFilters(); });
+            instituteFilterDOM.addEventListener('change', e => { activeFilters.institute = e.target.value; applyAllFiltersAndRender(false); updateDependentFilters(); });
             assessmentFormFilterDOM.addEventListener('change', e => { activeFilters.assessmentForm = e.target.value; applyAllFiltersAndRender(); });
             
             groupFilterInput.addEventListener('input', (e) => {
                 if (e.target.value === '' && activeFilters.group) { removeFilter('group'); }
-            });
-            instructorFilterInput.addEventListener('input', (e) => {
-                if (e.target.value === '' && activeFilters.instructor) { removeFilter('instructor'); }
             });
 
             eapFilterRadiosDOM.forEach(r => r.addEventListener('change', e => { activeFilters.eap = e.target.value; applyAllFiltersAndRender(); }));
